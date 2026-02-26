@@ -1,26 +1,25 @@
 #pragma once
 
-struct vertex {
-    std::array<float,3> v;
+#include <array>
 
-    Vertex() : v{0.0f, 0.0f, 0.0f} {}
-    Vertex(float x, float y, float z) : v{x, y, z} {} // member initializer list
+struct Vertex {
+    std::array<float,3> v{};
+
+    constexpr Vertex(
+        float x = 0.0f,
+        float y = 0.0f,
+        float z = 0.0f
+    ) : v{x, y, z} {}
 
     void setV(float x, float y, float z) {
-        v[0]=x;
-        v[1]=y;
-        v[2]=z;
+        v = {x, y, z};
     }
 
-    void transformV(float* matrix) {
-        float x = v[0], y = v[1], z = v[2], w = 1.0f;
+    void transformV(const std::array<float, 16>& m) {
+        float x0 = v[0], y0 = v[1], z0 = v[2];
 
-        float newX = matrix[0]*x + matrix[1]*y + matrix[2]*z + matrix[3]*w;
-        float newY = matrix[4]*x + matrix[5]*y + matrix[6]*z + matrix[7]*w;
-        float newZ = matrix[8]*x + matrix[9]*y + matrix[10]*z + matrix[11]*w;
-        
-        v[0] = newX;
-        v[1] = newY;
-        v[2] = newZ;
-    };
+        v[0] = m[0]*x0 + m[1]*y0 + m[2]*z0 + m[3];
+        v[1] = m[4]*x0 + m[5]*y0 + m[6]*z0 + m[7];
+        v[2] = m[8]*x0 + m[9]*y0 + m[10]*z0 + m[11];  
+    }
 };
