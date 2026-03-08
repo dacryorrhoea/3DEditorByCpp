@@ -1,10 +1,11 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
+#include <string>
+
 #include "scene.h"
 #include "ui.h"
 #include "render.h"
-// #include "window.h"
 
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) return 1;
@@ -40,7 +41,7 @@ int main() {
 
     
     std::string ObjPath = "../cube.obj";  
-    Scene_Init(renderer, 1400, 1000, );
+    Scene_Init(renderer, 1400, 1000);
 
 
     bool running = true;

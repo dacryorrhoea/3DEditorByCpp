@@ -3,7 +3,7 @@ PKG_LIBS   := $(shell pkg-config --libs sdl2 SDL2_ttf)
 
 SRC := $(wildcard src/*.cpp)
 BUILD_DIR := build
-INCLUDES := -I include
+INCLUDES := -I inc
 OBJ := $(patsubst src/%.cpp,$(BUILD_DIR)/%.o,$(SRC))
 TARGET := app
 
