@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <fstream>
+#include <sstream>
 #include "vertex.h"
 
 struct Edge {
@@ -21,9 +23,6 @@ public:
     void loadMeshFromFile(const std::string& filepath) {
         std::ifstream file(filepath);
         if (!file.is_open()) throw std::runtime_error("Cannot open file");
-
-        // vertices.clear();
-        // edges.clear();
 
         std::string line;
 
@@ -44,6 +43,20 @@ public:
 
                 edges.push_back({ i1 - 1, i2 - 1 });
             }
+        }
+    }
+
+    void printDebugInfo() const {
+        // вершины
+        for (size_t i = 0; i < vertices.size(); ++i) {
+            const auto &v = vertices[i].v;
+            std::cout << "[" << i << "] "
+                    << v[0] << ", " << v[1] << ", " << v[2] << "\n";
+        }
+        // рёбра
+        for (size_t i = 0; i < edges.size(); ++i) {
+            const auto &e = edges[i];
+            std::cout << "[" << i << "] " << e.f1 << " - " << e.f2 << "\n";
         }
     }
     
