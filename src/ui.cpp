@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "ui.h"
 
 static SDL_Texture* texture;

@@ -1,6 +1,6 @@
 #pragma once
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int W, int H);
 void UI_Destroy();

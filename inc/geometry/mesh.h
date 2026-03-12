@@ -1,10 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 #include <string>
 #include <array>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 #include "vertex.h"
 
 struct Edge {
@@ -19,6 +21,9 @@ private:
     std::string mesh_filepath;
 public:
     Mesh() {};
+
+    std::vector<Vertex>& getVertices() { return vertices; }
+    std::vector<Edge>& getEdges() { return edges; }
 
     void loadMeshFromFile(const std::string& filepath) {
         std::ifstream file(filepath);
@@ -50,21 +55,35 @@ public:
         // вершины
         for (size_t i = 0; i < vertices.size(); ++i) {
             const auto &v = vertices[i].v;
-            std::cout << "[" << i << "] "
-                    << v[0] << ", " << v[1] << ", " << v[2] << "\n";
+            std::cout << "[" << i << "] " << v[0] << ", " << v[1] << ", " << v[2] << "\n";
         }
         // рёбра
-        for (size_t i = 0; i < edges.size(); ++i) {
-            const auto &e = edges[i];
-            std::cout << "[" << i << "] " << e.f1 << " - " << e.f2 << "\n";
-        }
+        // for (size_t i = 0; i < edges.size(); ++i) {
+        //     const auto &e = edges[i];
+        //     std::cout << "[" << i << "] " << e.f1 << " - " << e.f2 << "\n";
+        // }
     }
     
     void shiftMesh() {
         // shift
     }
 
-    void rotateMesh() {
-        // rotate
+    void rotateMesh(float angle) {
+        const Vertex mesh_center = {0.0f, 0.0f, 0.0f};
+        float c = std::cos(angle);
+        float s = std::sin(angle);
+        float cx = mesh_center.v[0];
+        float cy = mesh_center.v[1];
+
+        std::array<float,16> m = {
+            c, -s, 0.0f, (1.0f - c) * cx + s * cy,
+            s,  c, 0.0f, -s * cx + (1.0f - c) * cy,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+
+        for (auto& vert : vertices) {
+            vert.transformV(m);
+        }
     }
 };
