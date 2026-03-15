@@ -35,12 +35,12 @@ int main() {
     );
     if (!font) { TTF_Quit(); SDL_Quit(); return 1; }
 
-
+    // ui init
     UI_Init(renderer, font, 1400, 1000);
 
     
+    // scene init
     static SDL_Texture* texture;
-    // Scene init
     texture = SDL_CreateTexture(
         renderer,
         SDL_PIXELFORMAT_RGBA8888,
@@ -91,9 +91,10 @@ int main() {
             }
         }
 
-        
+        scene.meshes[0].rotateMesh(0.01f);
         scene.projectMeshes();
-        Render_Draw(renderer, texture, scene);
+        
+        renderDraw(renderer, texture, scene);
         SDL_Delay(10);
     }
 
@@ -109,33 +110,3 @@ int main() {
 
     return 0;
 }
-
-
-
-// #include <iostream>
-
-// int main() {
-//     Mesh mesh;
-
-//     try {
-//         mesh.loadMeshFromFile("./cube.obj");
-//         std::cout << "mesh loaded successfully\n";
-//     }
-//     catch (const std::exception& e) {
-//         std::cout << "error: " << e.what() << "\n";
-//     }
-
-//     Scene scene(400, 400);
-
-//     scene.addMesh(mesh);
-//     scene.projectMeshes();
-
-//     std::vector<std::array<float,2>> arr;
-//     arr = scene.getProjected();
-
-//     for (const auto& p : arr) {
-//         std::cout << "x: " << p[0] << ", y: " << p[1] << "\n";
-//     }
-
-//     return 0;
-// }

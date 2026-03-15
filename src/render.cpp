@@ -7,7 +7,11 @@
 static Uint32* pixels;
 static int W, H;
 
-void Render_Draw(SDL_Renderer* renderer, SDL_Texture* texture, Scene& scene) {
+void renderInit() {
+
+}
+
+void renderDraw(SDL_Renderer* renderer, SDL_Texture* texture, Scene& scene) {
     W=1400;
     H=1000;
 

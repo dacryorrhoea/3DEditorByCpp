@@ -51,39 +51,52 @@ public:
         }
     }
 
-    void printDebugInfo() const {
-        // вершины
-        for (size_t i = 0; i < vertices.size(); ++i) {
-            const auto &v = vertices[i].v;
-            std::cout << "[" << i << "] " << v[0] << ", " << v[1] << ", " << v[2] << "\n";
-        }
-        // рёбра
-        // for (size_t i = 0; i < edges.size(); ++i) {
-        //     const auto &e = edges[i];
-        //     std::cout << "[" << i << "] " << e.f1 << " - " << e.f2 << "\n";
-        // }
-    }
+    // void printDebugInfo() const {
+    //     for (size_t i = 0; i < vertices.size(); ++i) {
+    //         const auto &v = vertices[i].v;
+    //         std::cout << "[" << i << "] " << v[0] << ", " << v[1] << ", " << v[2] << "\n";
+    //     }
+    //     for (size_t i = 0; i < edges.size(); ++i) {
+    //         const auto &e = edges[i];
+    //         std::cout << "[" << i << "] " << e.f1 << " - " << e.f2 << "\n";
+    //     }
+    // }
     
     void shiftMesh() {
         // shift
     }
 
     void rotateMesh(float angle) {
-        const Vertex mesh_center = {0.0f, 0.0f, 0.0f};
-        float c = std::cos(angle);
-        float s = std::sin(angle);
-        float cx = mesh_center.v[0];
-        float cy = mesh_center.v[1];
+        const Vertex mesh_center = {0.5f, 0.5f, 0.5f};
+        float cosA = std::cos(angle);
+        float sinA = std::sin(angle);
+        float cx = mesh_center.x;
+        float cy = mesh_center.y;
+        float cz = mesh_center.z;
 
-        std::array<float,16> m = {
-            c, -s, 0.0f, (1.0f - c) * cx + s * cy,
-            s,  c, 0.0f, -s * cx + (1.0f - c) * cy,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f
+        std::array<float,16> mX = {
+            cosA, -sinA, 0.0f, (1.0f - cosA) * cx + sinA * cy,
+            sinA,  cosA, 0.0f, -sinA * cx + (1.0f - cosA) * cy,
+            0.0f,  0.0f, 1.0f, 0.0f,
+            0.0f,  0.0f, 0.0f, 1.0f
+        };
+
+        std::array<float,16> mY = {
+            cosA,  0.0f, sinA, (1.0f - cosA) * cx - sinA * cz,
+            0.0f,  1.0f, 0.0f, 0.0f,
+            -sinA, 0.0f, cosA, sinA * cx + (1.0f - cosA) * cz,
+            0.0f,  0.0f, 0.0f, 1.0f
+        };
+
+        std::array<float,16> mZ = {
+            cosA, -sinA, 0.0f, (1.0f - cosA) * cx + sinA * cy,
+            sinA,  cosA, 0.0f, -sinA * cx + (1.0f - cosA) * cy,
+            0.0f,  0.0f, 1.0f, 0.0f,
+            0.0f,  0.0f, 0.0f, 1.0f
         };
 
         for (auto& vert : vertices) {
-            vert.transformV(m);
+            vert.transformV(mY);
         }
     }
 };

@@ -1,25 +1,39 @@
 #pragma once
 
-#include <array>
-
 struct Vertex {
-    std::array<float,3> v{};
+    float x, y, z;
 
     constexpr Vertex(
-        float x = 0.0f,
-        float y = 0.0f,
-        float z = 0.0f
-    ) : v{x, y, z} {}
+        float nx = 0.0f,
+        float ny = 0.0f,
+        float nz = 0.0f
+    ) noexcept : x(nx), y(ny), z(nz) {}
 
-    void setV(float x, float y, float z) {
-        v = {x, y, z};
+    constexpr void setV(float nx, float ny, float nz) noexcept {
+        x = nx;
+        y = ny;
+        z = nz;
     }
 
-    void transformV(const std::array<float, 16>& m) {
-        float x0 = v[0], y0 = v[1], z0 = v[2];
+    // constexpr void translateV(float t) noexcept {
+    //     x += t;
+    //     y += t;
+    //     z += t;
+    // }
 
-        v[0] = m[0]*x0 + m[1]*y0 + m[2]*z0 + m[3];
-        v[1] = m[4]*x0 + m[5]*y0 + m[6]*z0 + m[7];
-        v[2] = m[8]*x0 + m[9]*y0 + m[10]*z0 + m[11];  
+    // constexpr void scaleV(float t) noexcept {
+    //     x *= t;
+    //     y *= t;
+    //     z *= t;
+    // }
+
+    void transformV(const std::array<float, 16>& m) noexcept {
+        float nx = m[0]*x + m[1]*y + m[2]*z + m[3];
+        float ny = m[4]*x + m[5]*y + m[6]*z + m[7];
+        float nz = m[8]*x + m[9]*y + m[10]*z + m[11];
+
+        x = nx;
+        y = ny;
+        z = nz;
     }
 };
