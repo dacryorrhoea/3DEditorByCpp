@@ -1,10 +1,12 @@
 #include "pch.h"
 
 #include "geometry/mesh.h"
-#include "geometry/scene.h"
-
+#include "scene.h"
 #include "ui.h"
 #include "render.h"
+
+const int WINDOW_W = 1400;
+const int WINDOW_H = 1000;
 
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) return 1;
@@ -15,19 +17,11 @@ int main() {
         "(X_X)",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        1400, // width
-        1000, // height
+        WINDOW_W,
+        WINDOW_H,
         0
     );
     if (!window) { SDL_Quit(); return 1; }
-
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(
-        window, -1,
-        SDL_RENDERER_SOFTWARE
-    );
-    if (!renderer) { SDL_DestroyWindow(window); SDL_Quit(); return 1; }
-
 
     TTF_Font* font = TTF_OpenFont(
         "/usr/share/fonts/dejavu-sans-fonts/DejaVuSans.ttf",
@@ -35,18 +29,22 @@ int main() {
     );
     if (!font) { TTF_Quit(); SDL_Quit(); return 1; }
 
-    // ui init
-    UI_Init(renderer, font, 1400, 1000);
+    SDL_Renderer* renderer = SDL_CreateRenderer(
+        window, -1,
+        SDL_RENDERER_SOFTWARE
+    );
+    if (!renderer) { SDL_DestroyWindow(window); SDL_Quit(); return 1; }
 
-    
-    // scene init
-    static SDL_Texture* texture;
+    SDL_Texture* texture;
     texture = SDL_CreateTexture(
         renderer,
         SDL_PIXELFORMAT_RGBA8888,
         SDL_TEXTUREACCESS_STATIC,
-        1400, 1000
+        WINDOW_W, WINDOW_H
     );
+    
+    Canvas canvas(WINDOW_W, WINDOW_H, renderer, texture);
+    Scene scene(WINDOW_W, WINDOW_H);
 
     Mesh mesh;
     try {
@@ -57,7 +55,6 @@ int main() {
         std::cout << "error: " << e.what() << "\n";
     }
 
-    Scene scene(1400, 1000);
 
     scene.addMesh(mesh);
 
@@ -76,10 +73,10 @@ int main() {
                 event.type == SDL_MOUSEBUTTONDOWN &&
                 event.button.button == SDL_BUTTON_LEFT
             ) {
-                if (UI_HitTest(event.button.x, event.button.y)) {
-                    running = false;
-                    continue;
-                }
+                // if (UI_HitTest(event.button.x, event.button.y)) {
+                //     running = false;
+                //     continue;
+                // }
             }
 
             if (
@@ -94,16 +91,16 @@ int main() {
         scene.meshes[0].rotateMesh(0.01f);
         scene.projectMeshes();
         
-        renderDraw(renderer, texture, scene);
+        canvas.toRasterizRender(scene.getProjected(), scene.getProjected());
+        
         SDL_Delay(10);
     }
 
-    UI_Destroy();
-    SDL_DestroyTexture(texture);
 
     TTF_CloseFont(font);
     TTF_Quit();
 
+    SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
