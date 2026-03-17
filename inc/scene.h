@@ -45,9 +45,9 @@ private:
     int W;
     int H;
     float focal;
-    Camera camera;
     std::vector<std::array<float,2>> projectedPoints;
 public:
+    Camera camera; 
     std::vector<Mesh> meshes;
 
     Scene(int w, int h)
@@ -58,6 +58,10 @@ public:
     {}
 
     void projectMeshes();
+
+    void toRotateCamera(int dx, int dy) {
+        
+    }
 
     void addMesh(const Mesh& mesh) {
         meshes.push_back(mesh);

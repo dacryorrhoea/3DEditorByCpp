@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "render.h"
+#include "canvas.h"
 
 void Canvas::toRasterizRender(
     std::vector<std::array<float,2>> scene_proj,

@@ -1,50 +1,25 @@
 #include "pch.h"
 
 #include "geometry/mesh.h"
+#include "app_context.h"
 #include "scene.h"
 #include "ui.h"
-#include "render.h"
-
-const int WINDOW_W = 1400;
-const int WINDOW_H = 1000;
+#include "canvas.h"
 
 int main() {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) return 1;
+    AppContext app_context(1400, 1000);
+    if (app_context.fail) return 1;
 
-    if (TTF_Init() != 0) { SDL_Quit(); return 1; }
-
-    SDL_Window* window = SDL_CreateWindow(
-        "(X_X)",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        WINDOW_W,
-        WINDOW_H,
-        0
+    Canvas canvas(
+        app_context.window_w,
+        app_context.window_h,
+        app_context.renderer,
+        app_context.texture
     );
-    if (!window) { SDL_Quit(); return 1; }
-
-    TTF_Font* font = TTF_OpenFont(
-        "/usr/share/fonts/dejavu-sans-fonts/DejaVuSans.ttf",
-        32
+    Scene scene(
+        app_context.window_w,
+        app_context.window_h
     );
-    if (!font) { TTF_Quit(); SDL_Quit(); return 1; }
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(
-        window, -1,
-        SDL_RENDERER_SOFTWARE
-    );
-    if (!renderer) { SDL_DestroyWindow(window); SDL_Quit(); return 1; }
-
-    SDL_Texture* texture;
-    texture = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_RGBA8888,
-        SDL_TEXTUREACCESS_STATIC,
-        WINDOW_W, WINDOW_H
-    );
-    
-    Canvas canvas(WINDOW_W, WINDOW_H, renderer, texture);
-    Scene scene(WINDOW_W, WINDOW_H);
 
     Mesh mesh;
     try {
@@ -61,14 +36,19 @@ int main() {
 
     bool running = true;
     SDL_Event event;
+    const Uint8* state = SDL_GetKeyboardState(NULL);
+    Uint32 mouse;
+    bool cameraControl = false;
 
     while (running) {
         while (SDL_PollEvent(&event)) {
+            // system close button
             if (event.type == SDL_QUIT) {
                 running = false;
                 continue;
             }
 
+            // mouse left click
             if (
                 event.type == SDL_MOUSEBUTTONDOWN &&
                 event.button.button == SDL_BUTTON_LEFT
@@ -79,6 +59,24 @@ int main() {
                 // }
             }
 
+            // mouse middle click
+            if (
+                event.type == SDL_MOUSEBUTTONDOWN &&
+                event.button.button == SDL_BUTTON_MIDDLE
+            ) {
+                SDL_SetRelativeMouseMode(SDL_TRUE);
+                cameraControl = true;
+            }
+
+            if (
+                event.type == SDL_MOUSEBUTTONUP &&
+                event.button.button == SDL_BUTTON_MIDDLE
+            ) {
+                SDL_SetRelativeMouseMode(SDL_FALSE);
+                cameraControl = false;
+            }
+
+            // exit
             if (
                 event.type == SDL_KEYDOWN &&
                 event.key.keysym.sym == SDLK_ESCAPE
@@ -88,22 +86,40 @@ int main() {
             }
         }
 
-        scene.meshes[0].rotateMesh(0.01f);
+        // WASD movement
+        state = SDL_GetKeyboardState(NULL);
+        if (state[SDL_SCANCODE_W]) {
+            scene.camera.moveForwardBackward(0.1f);
+        }
+        if (state[SDL_SCANCODE_A]) {
+            scene.camera.moveRightLeft(-0.1f);
+        }
+        if (state[SDL_SCANCODE_S]) {
+            scene.camera.moveForwardBackward(-0.1f);
+        }
+        if (state[SDL_SCANCODE_D]) {
+            scene.camera.moveRightLeft(0.1f);
+        }
+
+        // camera control
+        int dx, dy;
+        SDL_GetRelativeMouseState(&dx, &dy);
+        mouse = SDL_GetMouseState(NULL, NULL);
+
+        if (cameraControl) {
+            if (dx) scene.camera.rotateYaw(-(0.001f * dx));
+            if (dy) scene.camera.rotatePitch(0.001f * dy);
+        }
+
+
+        // пока так, потом будет нормально переписано
+        // scene.meshes[0].rotateMesh(0.01f);
         scene.projectMeshes();
         
         canvas.toRasterizRender(scene.getProjected(), scene.getProjected());
         
         SDL_Delay(10);
     }
-
-
-    TTF_CloseFont(font);
-    TTF_Quit();
-
-    SDL_DestroyTexture(texture);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 
     return 0;
 }
