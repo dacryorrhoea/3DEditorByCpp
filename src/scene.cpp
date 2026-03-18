@@ -2,6 +2,7 @@
 
 #include "scene.h"
 #include "geometry/vertex.h"
+#include "custom_types.h"
 
 void Camera::rotateYaw(float angle) {
     float sinA = std::sin(angle);
@@ -91,65 +92,76 @@ void Camera::rotatePitch(float angle) {
     right.z /= rl;
 }
 
-void Scene::projectMeshes() {
-    projectedPoints.clear();
+void Scene::toProjectingScene() {
+    polygons.clear();
 
-    for (auto &mesh : meshes) {
-        auto &verts = mesh.getVertices();
-        auto &edges = mesh.getEdges();
+    const float HW = W * 0.5f;
+    const float HH = H * 0.5f;
+    
+    for (Mesh& mesh : meshes) {
+        std::vector<Vertex>& vertices = mesh.getVertices();
+        std::vector<Faces>& faces = mesh.getFaces();
+        std::vector<Edge>& edges = mesh.getEdges();
+        std::vector<Vertex> verticesCamSpace(vertices.size());
 
-        std::vector<std::array<float,2>> verts2D(verts.size());
+        for (size_t i = 0; i < vertices.size(); ++i) {
+            float vx = vertices[i].x - camera.position.x;
+            float vy = vertices[i].y - camera.position.y;
+            float vz = vertices[i].z - camera.position.z;
 
-        for (size_t i = 0; i < verts.size(); ++i) {
-            const auto &v = verts[i];
-
-            float vx = v.x - camera.position.x;
-            float vy = v.y - camera.position.y;
-            float vz = v.z - camera.position.z;
-
-            float rdx = vx * camera.right.x   + vy * camera.right.y   + vz * camera.right.z;
-            float ry  = vx * camera.up.x      + vy * camera.up.y      + vz * camera.up.z;
-            float rdz = vx * camera.forward.x + vy * camera.forward.y + vz * camera.forward.z;
-
-            if (rdz <= 0.0001f) {
-                verts2D[i] = { NAN, NAN };
-                continue;
-            }
-
-            float sx = (rdx / rdz) * focal + (W * 0.5f);
-            float syi = (ry  / rdz) * focal + (H * 0.5f);
-            verts2D[i] = { sx, syi };
+            verticesCamSpace[i].x = vx * camera.right.x   + vy * camera.right.y   + vz * camera.right.z;
+            verticesCamSpace[i].y = vx * camera.up.x      + vy * camera.up.y      + vz * camera.up.z;
+            verticesCamSpace[i].z = vx * camera.forward.x + vy * camera.forward.y + vz * camera.forward.z;
         }
 
-        for (const auto &e : edges) {
-            int a = e.f1;
-            int b = e.f2;
-            if (a < 0 || b < 0 || (size_t)a >= verts2D.size() || (size_t)b >= verts2D.size())
-                continue;
+        for (Faces& face : faces) {
+            Vertex v1 = verticesCamSpace[face.f1];
+            Vertex v2 = verticesCamSpace[face.f2];
+            Vertex v3 = verticesCamSpace[face.f3];
 
-            auto &p1 = verts2D[a];
-            auto &p2 = verts2D[b];
+            if (v1.z <= 0.0001f && v2.z <= 0.0001f && v3.z <= 0.0001f) continue;
 
-            if (std::isnan(p1[0]) || std::isnan(p2[0])) continue;
+            Vertex u1, u2;
+            u1.x = v2.x - v1.x;
+            u1.y = v2.y - v1.y;
+            u1.z = v2.z - v1.z;
 
-            int x0 = static_cast<int>(p1[0]);
-            int y0 = static_cast<int>(p1[1]);
-            int x1 = static_cast<int>(p2[0]);
-            int y1 = static_cast<int>(p2[1]);
+            u2.x = v3.x - v1.x;
+            u2.y = v3.y - v1.y;
+            u2.z = v3.z - v1.z;
 
-            int dx = std::abs(x1 - x0);
-            int dy = std::abs(y1 - y0);
-            int sx = x0 < x1 ? 1 : -1;
-            int sy = y0 < y1 ? 1 : -1;
-            int err = dx - dy;
+            Vertex n;
+            n.x = u1.y * u2.z - u1.z * u2.y;
+            n.y = u1.z * u2.x - u1.x * u2.z;
+            n.z = u1.x * u2.y - u1.y * u2.x;
 
-            while (true) {
-                projectedPoints.push_back({ float(x0), float(y0) });
-                if (x0 == x1 && y0 == y1) break;
-                int e2 = 2 * err;
-                if (e2 > -dy) { err -= dy; x0 += sx; }
-                if (e2 < dx)  { err += dx; y0 += sy; }
-            }
+            if (std::abs(n.x) + std::abs(n.y) + std::abs(n.z) < 1e-6) continue;
+
+            Vertex o;
+            o.x = (v1.x + v2.x + v3.x)/3;
+            o.y = (v1.y + v2.y + v3.y)/3;
+            o.z = (v1.z + v2.z + v3.z)/3;
+
+            float dot = n.x * o.x + n.y * o.y + n.z * o.z;
+
+            if (dot < 0) continue;
+
+            Polygon pol;
+            pol.p1.x = static_cast<int>((v1.x / v1.z) * focal + HW + 0.5f);
+            pol.p1.y = static_cast<int>(-(v1.y / v1.z) * focal + HH + 0.5f);
+            pol.p1.inv_z = 1/v1.z;
+
+            pol.p2.x = static_cast<int>((v2.x / v2.z) * focal + HW + 0.5f);
+            pol.p2.y = static_cast<int>(-(v2.y / v2.z) * focal + HH + 0.5f);
+            pol.p2.inv_z = 1/v2.z;
+
+            pol.p3.x = static_cast<int>((v3.x / v3.z) * focal + HW + 0.5f);
+            pol.p3.y = static_cast<int>(-(v3.y / v3.z) * focal + HH + 0.5f);
+            pol.p3.inv_z = 1/v3.z;
+
+            pol.color = 0xFF69B4FF;
+
+            polygons.push_back(pol);
         }
     }
 }

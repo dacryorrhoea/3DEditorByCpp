@@ -2,6 +2,8 @@
 
 #include "geometry/mesh.h"
 #include "geometry/vertex.h"
+#include "custom_types.h"
+#include <cmath>
 
 
 struct Camera {
@@ -11,7 +13,7 @@ struct Camera {
     Vertex up;
 
     Camera()
-        : position(0.5f, 0.5f, 5.0f)
+        : position(0.5f, 0.5f, 80.0f)
         , forward(0.0f, 0.0f, -1.0f)
         , right(1.0f, 0.0f, 0.0f)
         , up(0.0f, 1.0f, 0.0f)
@@ -45,7 +47,7 @@ private:
     int W;
     int H;
     float focal;
-    std::vector<std::array<float,2>> projectedPoints;
+    std::vector<Polygon> polygons;
 public:
     Camera camera; 
     std::vector<Mesh> meshes;
@@ -57,17 +59,13 @@ public:
         , camera()
     {}
 
-    void projectMeshes();
-
-    void toRotateCamera(int dx, int dy) {
-        
-    }
+    void toProjectingScene();
 
     void addMesh(const Mesh& mesh) {
         meshes.push_back(mesh);
     }
 
-    const std::vector<std::array<float,2>>& getProjected() const {
-        return projectedPoints;
+    const std::vector<Polygon>& getPolygons() const {
+        return polygons;
     }
 };

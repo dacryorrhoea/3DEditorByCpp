@@ -6,6 +6,8 @@
 #include "ui.h"
 #include "canvas.h"
 
+const float CAM_SPEED = 1.0f;
+
 int main() {
     AppContext app_context(1400, 1000);
     if (app_context.fail) return 1;
@@ -76,6 +78,15 @@ int main() {
                 cameraControl = false;
             }
 
+            // mouse wheel
+            if (event.type == SDL_MOUSEWHEEL) {
+                if (event.wheel.y > 0) {
+                    scene.camera.moveForwardBackward(CAM_SPEED*7);
+                } else if (event.wheel.y < 0) {
+                    scene.camera.moveForwardBackward(-CAM_SPEED*7);
+                }
+            }
+
             // exit
             if (
                 event.type == SDL_KEYDOWN &&
@@ -89,16 +100,22 @@ int main() {
         // WASD movement
         state = SDL_GetKeyboardState(NULL);
         if (state[SDL_SCANCODE_W]) {
-            scene.camera.moveForwardBackward(0.1f);
+            scene.camera.moveForwardBackward(CAM_SPEED);
         }
         if (state[SDL_SCANCODE_A]) {
-            scene.camera.moveRightLeft(-0.1f);
+            scene.camera.moveRightLeft(-CAM_SPEED);
         }
         if (state[SDL_SCANCODE_S]) {
-            scene.camera.moveForwardBackward(-0.1f);
+            scene.camera.moveForwardBackward(-CAM_SPEED);
         }
         if (state[SDL_SCANCODE_D]) {
-            scene.camera.moveRightLeft(0.1f);
+            scene.camera.moveRightLeft(CAM_SPEED);
+        }
+        if (state[SDL_SCANCODE_SPACE]) {
+            scene.camera.moveUpDown(CAM_SPEED);
+        }
+        if (state[SDL_SCANCODE_LSHIFT]) {
+            scene.camera.moveUpDown(-CAM_SPEED);
         }
 
         // camera control
@@ -107,16 +124,15 @@ int main() {
         mouse = SDL_GetMouseState(NULL, NULL);
 
         if (cameraControl) {
-            if (dx) scene.camera.rotateYaw(-(0.001f * dx));
-            if (dy) scene.camera.rotatePitch(0.001f * dy);
+            if (dx) scene.camera.rotateYaw(-0.001f * dx);
+            if (dy) scene.camera.rotatePitch(-0.001f * dy);
         }
-
 
         // пока так, потом будет нормально переписано
         // scene.meshes[0].rotateMesh(0.01f);
-        scene.projectMeshes();
+        scene.toProjectingScene();
         
-        canvas.toRasterizRender(scene.getProjected(), scene.getProjected());
+        canvas.toRasterizRender(scene.getPolygons(), scene.getPolygons());
         
         SDL_Delay(10);
     }

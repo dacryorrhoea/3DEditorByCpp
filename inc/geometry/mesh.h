@@ -10,12 +10,17 @@
 #include "vertex.h"
 
 struct Edge {
-  int f1, f2;
+  int e1, e2;
+};
+
+struct Faces {
+    int f1, f2, f3;
 };
 
 class Mesh {
 private:
     std::vector<Vertex> vertices;
+    std::vector<Faces> faces;
     std::vector<Edge> edges;
     Vertex mesh_center;
     std::string mesh_filepath;
@@ -23,6 +28,7 @@ public:
     Mesh() {};
 
     std::vector<Vertex>& getVertices() { return vertices; }
+    std::vector<Faces>& getFaces() { return faces; }
     std::vector<Edge>& getEdges() { return edges; }
 
     void loadMeshFromFile(const std::string& filepath) {
@@ -47,6 +53,33 @@ public:
                 ss >> i1 >> i2;
 
                 edges.push_back({ i1 - 1, i2 - 1 });
+            }
+            else if (prefix == "f") {
+                std::string token;
+                std::vector<int> idx;
+
+                while (ss >> token) {
+                    // берем часть до первого '/' если есть
+                    size_t p = token.find('/');
+                    std::string vstr = (p == std::string::npos) ? token : token.substr(0, p);
+                    if (vstr.empty()) continue;
+
+                    int vi = std::stoi(vstr); // в OBJ индексация с 1, могут быть и отрицательные
+                    if (vi < 0) {
+                        // относительный индекс: -1 значит последняя добавленная вершина
+                        vi = static_cast<int>(vertices.size()) + vi;
+                    } else {
+                        vi = vi - 1; // сделать 0-based
+                    }
+                    idx.push_back(vi);
+                }
+
+                if (idx.size() < 3) continue; // не треугольник — не рисуем
+
+                // Триангулируем полигон (fan): (0,1,2), (0,2,3), ...
+                for (size_t k = 1; k + 1 < idx.size(); ++k) {
+                    faces.push_back({ idx[0], idx[k], idx[k+1] });
+                }
             }
         }
     }
