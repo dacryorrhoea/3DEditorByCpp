@@ -128,8 +128,6 @@ int main() {
             if (dy) scene.camera.rotatePitch(-0.001f * dy);
         }
 
-        // пока так, потом будет нормально переписано
-        // scene.meshes[0].rotateMesh(0.01f);
         scene.toProjectingScene();
         
         canvas.toRasterizRender(scene.getPolygons(), scene.getPolygons());
