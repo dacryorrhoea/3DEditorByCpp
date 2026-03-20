@@ -119,7 +119,7 @@ void Scene::toProjectingScene() {
             Vertex v2 = verticesCamSpace[face.f2];
             Vertex v3 = verticesCamSpace[face.f3];
 
-            if (v1.z <= 0.0001f && v2.z <= 0.0001f && v3.z <= 0.0001f) continue;
+            if (std::abs(v1.z) < 0.01f || std::abs(v2.z) < 0.01f || std::abs(v3.z) < 0.01f) continue;
 
             Vertex u1, u2;
             u1.x = v2.x - v1.x;
@@ -137,12 +137,9 @@ void Scene::toProjectingScene() {
 
             if (std::abs(n.x) + std::abs(n.y) + std::abs(n.z) < 1e-6) continue;
 
-            Vertex o;
-            o.x = (v1.x + v2.x + v3.x)/3;
-            o.y = (v1.y + v2.y + v3.y)/3;
-            o.z = (v1.z + v2.z + v3.z)/3;
-
-            float dot = n.x * o.x + n.y * o.y + n.z * o.z;
+            float dot = n.x * (v1.x + v2.x + v3.x) / 3 +
+                        n.y * (v1.y + v2.y + v3.y) / 3 +
+                        n.z * (v1.z + v2.z + v3.z) / 3;
 
             if (dot < 0) continue;
 
