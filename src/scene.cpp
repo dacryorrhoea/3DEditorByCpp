@@ -17,7 +17,7 @@ void Camera::rotateYaw(float angle) {
         0.0f,  0.0f,     0.0f, 1.0f
     };
 
-    forward.transformV(m);
+    forward.transformVertex(m);
 
     // orthonormalization aka Gram–Schmidt
     // step 1
@@ -61,7 +61,7 @@ void Camera::rotatePitch(float angle) {
         0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    forward.transformV(m);
+    forward.transformVertex(m);
 
     // orthonormalization aka Gram–Schmidt
     // step 1
@@ -98,10 +98,10 @@ void Scene::toProjectingScene() {
     const float HW = W * 0.5f;
     const float HH = H * 0.5f;
     
-    for (Mesh& mesh : meshes) {
+    for (auto& meshPtr : meshes) {
+        Mesh& mesh = *meshPtr;
         std::vector<Vertex>& vertices = mesh.getVertices();
         std::vector<Faces>& faces = mesh.getFaces();
-        std::vector<Edge>& edges = mesh.getEdges();
         std::vector<Vertex> verticesCamSpace(vertices.size());
 
         for (size_t i = 0; i < vertices.size(); ++i) {

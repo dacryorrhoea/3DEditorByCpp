@@ -66,22 +66,9 @@ void Canvas::toRasterizRender(
     SDL_UpdateTexture(texture, NULL, pixels_buffer, W * sizeof(Uint32));
     SDL_RenderCopy(renderer, texture, NULL, NULL);
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 105, 180, 255);
     for (const Polygon& pol : scene_proj) {
-        int pos1 = pol.p1.y * W + pol.p1.x;
-        if (pos1 >= buffer_size) continue;
-        if (pol.p1.inv_z < z_buffer[pos1]) continue;
-
-        int pos2 = pol.p2.y * W + pol.p2.x;
-        if (pos2 >= buffer_size) continue;
-        if (pol.p2.inv_z < z_buffer[pos2]) continue;
-
         SDL_RenderDrawLine(renderer, pol.p1.x, pol.p1.y, pol.p2.x, pol.p2.y);
-
-        int pos3 = pol.p3.y * W + pol.p3.x;
-        if (pos3 >= buffer_size) continue;
-        if (pol.p3.inv_z < z_buffer[pos3]) continue;
-
         SDL_RenderDrawLine(renderer, pol.p2.x, pol.p2.y, pol.p3.x, pol.p3.y);
         SDL_RenderDrawLine(renderer, pol.p3.x, pol.p3.y, pol.p1.x, pol.p1.y);
     }

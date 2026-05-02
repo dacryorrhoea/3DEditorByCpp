@@ -1,6 +1,7 @@
 #include "pch.h"
 
-#include "geometry/mesh.h"
+#include <memory>
+#include "objects/object_3d.h"
 #include "app_context.h"
 #include "scene.h"
 #include "ui.h"
@@ -23,18 +24,7 @@ int main() {
         app_context.window_h
     );
 
-    Mesh mesh;
-    try {
-        mesh.loadMeshFromFile("./cube.obj");
-        std::cout << "mesh loaded successfully\n";
-    }
-    catch (const std::exception& e) {
-        std::cout << "error: " << e.what() << "\n";
-    }
-
-
-    scene.addMesh(mesh);
-
+    scene.addMesh(std::make_unique<Object3D>("./cube.obj"));
 
     bool running = true;
     SDL_Event event;

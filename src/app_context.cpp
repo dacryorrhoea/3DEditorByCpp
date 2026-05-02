@@ -29,7 +29,7 @@ AppContext::AppContext(int w, int h) {
     }
 
     font = TTF_OpenFont(
-        "/usr/share/fonts/dejavu-sans-fonts/DejaVuSans.ttf",
+        "/usr/share/fonts/google-noto-vf/NotoSerifKannada[wght].ttf",
         32
     );
     if (!font) {

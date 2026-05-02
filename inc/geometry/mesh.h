@@ -8,101 +8,40 @@
 #include <sstream>
 #include <cmath>
 #include "vertex.h"
-
-struct Edge {
-  int e1, e2;
-};
+#include "vertex_set.h"
 
 struct Faces {
     int f1, f2, f3;
 };
 
-class Mesh {
-private:
-    std::vector<Vertex> vertices;
+class Mesh : public VertexSet {
+protected:
     std::vector<Faces> faces;
-    std::vector<Edge> edges;
-    Vertex mesh_center;
-    std::string mesh_filepath;
 public:
-    Mesh() {};
-
-    std::vector<Vertex>& getVertices() { return vertices; }
-    std::vector<Faces>& getFaces() { return faces; }
-    std::vector<Edge>& getEdges() { return edges; }
-
-    void loadMeshFromFile(const std::string& filepath) {
-        std::ifstream file(filepath);
-        if (!file.is_open()) throw std::runtime_error("Cannot open file");
-
-        std::string line;
-
-        while (std::getline(file, line))
-        {
-            std::stringstream ss(line);
-            std::string prefix;
-            ss >> prefix;
-
-            if (prefix == "v") {
-                float x, y, z;
-                ss >> x >> y >> z;
-                vertices.emplace_back(x, y, z);
-            }
-            else if (prefix == "l") {
-                int i1, i2;
-                ss >> i1 >> i2;
-
-                edges.push_back({ i1 - 1, i2 - 1 });
-            }
-            else if (prefix == "f") {
-                std::string token;
-                std::vector<int> idx;
-
-                while (ss >> token) {
-                    size_t p = token.find('/');
-                    std::string vstr = (p == std::string::npos) ? token : token.substr(0, p);
-                    if (vstr.empty()) continue;
-
-                    int vi = std::stoi(vstr);
-                    if (vi < 0) {
-                        vi = static_cast<int>(vertices.size()) + vi;
-                    } else {
-                        vi = vi - 1;
-                    }
-                    idx.push_back(vi);
-                }
-
-                if (idx.size() < 3) continue;
-
-                for (size_t k = 1; k + 1 < idx.size(); ++k) {
-                    faces.push_back({ idx[0], idx[k], idx[k+1] });
-                }
-            }
-        }
+    // конструктор наследуется от vertexset и добавляет запись полученныых faces
+    Mesh(
+        const std::vector<float>& v,
+        const std::vector<int>& f
+    ) : VertexSet(v)  {
+        if (f.size() % 3 != 0)
+            throw std::invalid_argument("must be multiples of 3");
+        faces.reserve(f.size() / 3);
+        for (size_t i = 0; i < f.size(); i += 3)
+            faces.push_back({f[i], f[i+1], f[i+2]});
     }
 
-    // void printDebugInfo() const {
-    //     for (size_t i = 0; i < vertices.size(); ++i) {
-    //         const auto &v = vertices[i].v;
-    //         std::cout << "[" << i << "] " << v[0] << ", " << v[1] << ", " << v[2] << "\n";
-    //     }
-    //     for (size_t i = 0; i < edges.size(); ++i) {
-    //         const auto &e = edges[i];
-    //         std::cout << "[" << i << "] " << e.f1 << " - " << e.f2 << "\n";
-    //     }
-    // }
-    
+    std::vector<Faces>& getFaces() { return faces; }
+
     void shiftMesh() {
-        // shift
+        // poof
     }
 
     void rotateMesh(float angle) {
-        const Vertex mesh_center = {0.5f, 0.5f, 0.5f};
         float cosA = std::cos(angle);
         float sinA = std::sin(angle);
-        float cx = mesh_center.x;
-        float cy = mesh_center.y;
-        float cz = mesh_center.z;
+        float cx = 0.5f;
+        float cy = 0.5f;
+        float cz = 0.5f;
 
         std::array<float,16> mX = {
             cosA, -sinA, 0.0f, (1.0f - cosA) * cx + sinA * cy,
@@ -125,8 +64,6 @@ public:
             0.0f,  0.0f, 0.0f, 1.0f
         };
 
-        for (auto& vert : vertices) {
-            vert.transformV(mY);
-        }
+        transformVertexSet(mY);
     }
 };

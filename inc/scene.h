@@ -48,9 +48,9 @@ private:
     int H;
     float focal;
     std::vector<Polygon> polygons;
+    std::vector<std::unique_ptr<Mesh>> meshes;
 public:
-    Camera camera; 
-    std::vector<Mesh> meshes;
+    Camera camera;  
 
     Scene(int w, int h)
         : W(w)
@@ -61,8 +61,8 @@ public:
 
     void toProjectingScene();
 
-    void addMesh(const Mesh& mesh) {
-        meshes.push_back(mesh);
+    void addMesh(std::unique_ptr<Mesh> mesh) {
+        meshes.push_back(std::move(mesh));
     }
 
     const std::vector<Polygon>& getPolygons() const {

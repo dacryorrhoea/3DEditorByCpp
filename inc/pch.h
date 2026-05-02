@@ -7,3 +7,4 @@
 #include <cmath>
 #include <array>
 #include <string>
+#include <memory>
