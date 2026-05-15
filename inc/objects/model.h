@@ -1,17 +1,17 @@
 #pragma once
 
+#include <filesystem>
+#include "scene/object.h"
 #include "geometry/mesh.h"
 
-class Object3D : public Mesh {
+class Model : public Object, public Mesh {
 private:
-    std::string mesh_filepath;
-
     struct FileData {
         std::vector<float> verts;
         std::vector<int> faces;
     };
 
-    static FileData loadFileData(const std::string& filepath) {
+    static FileData loadFromObj(const std::string& filepath) {
         std::ifstream file(filepath);
         if (!file.is_open()) throw std::runtime_error("Cannot open file");
 
@@ -43,7 +43,25 @@ private:
         return data;
     }
 
-    explicit Object3D(FileData data) : Mesh(data.verts, data.faces) {}
+    static FileData loadFromStl(const std::string& filepath) {
+        FileData data;
+        // @_@
+        return data;
+    }
+
+    static FileData loadByExtension(const std::string& filepath) {
+        std::filesystem::path p(filepath);
+        std::string ext = p.extension().string();
+
+        if (ext == ".obj") return loadFromObj(filepath);
+        if (ext == ".stl") return loadFromStl(filepath);
+
+        throw std::runtime_error("Unsup: " + ext);
+    }
+
+    explicit Model(FileData data) : Mesh(data.verts, data.faces) {}
 public:
-    explicit Object3D(const std::string& filepath) : Object3D(loadFileData(filepath)) {}
+    explicit Model(const std::string& filepath) : Model(loadByExtension(filepath)) {}
+
+    std::string getName() const override { return "Model"; }
 };

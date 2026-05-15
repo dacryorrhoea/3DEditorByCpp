@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "custom_types.h"
+#include "sup_class/custom_types.h"
 
 class Canvas {
 private:
@@ -33,7 +33,7 @@ public:
     
     void toRasterizRender(
         std::vector<Polygon> scene_proj,
-        std::vector<Polygon> ui_buffer
+        Uint32* ui_buffer
     );
 
     void toUpdate(int w, int h) {

@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "app_context.h"
+#include "sup_class/pch.h"
+#include "sup_class/app_context.h"
 
 AppContext::AppContext(int w, int h) {
     window_w = w;
@@ -29,8 +29,8 @@ AppContext::AppContext(int w, int h) {
     }
 
     font = TTF_OpenFont(
-        "/usr/share/fonts/google-noto-vf/NotoSerifKannada[wght].ttf",
-        32
+        "/usr/share/fonts/google-droid-sans-fonts/DroidSans.ttf",
+        24
     );
     if (!font) {
         SDL_DestroyWindow(window);

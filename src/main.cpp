@@ -1,16 +1,16 @@
-#include "pch.h"
+#include "sup_class/pch.h"
 
 #include <memory>
-#include "objects/object_3d.h"
-#include "app_context.h"
-#include "scene.h"
+#include "sup_class/app_context.h"
+#include "objects/model.h"
+#include "scene/scene.h"
 #include "ui.h"
 #include "canvas.h"
 
 const float CAM_SPEED = 1.0f;
 
 int main() {
-    AppContext app_context(1400, 1000);
+    AppContext app_context(2000, 1200);
     if (app_context.fail) return 1;
 
     Canvas canvas(
@@ -19,18 +19,42 @@ int main() {
         app_context.renderer,
         app_context.texture
     );
+
     Scene scene(
         app_context.window_w,
         app_context.window_h
     );
 
-    scene.addMesh(std::make_unique<Object3D>("./cube.obj"));
+    UI ui(
+        app_context.window_w,
+        app_context.window_h,
+        app_context.font
+    );
+
+    scene.addModel("./cube.obj");
 
     bool running = true;
     SDL_Event event;
     const Uint8* state = SDL_GetKeyboardState(NULL);
     Uint32 mouse;
     bool cameraControl = false;
+
+    
+    ui.clearButtons();
+
+    Object* currObject = scene.getObjects()[0];
+
+    int btnY = 40;
+    for (Object* obj : scene.getObjects()) {
+        ui.addButton(
+            0, btnY, 200, 30,
+            obj->getName(),
+            [&currObject, obj]() {
+                currObject = obj;
+            }
+        );
+        btnY += 34;
+    }
 
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -45,10 +69,10 @@ int main() {
                 event.type == SDL_MOUSEBUTTONDOWN &&
                 event.button.button == SDL_BUTTON_LEFT
             ) {
-                // if (UI_HitTest(event.button.x, event.button.y)) {
-                //     running = false;
-                //     continue;
-                // }
+                ui.hitTest(
+                    event.button.x,
+                    event.button.y
+                );
             }
 
             // mouse middle click
@@ -71,9 +95,9 @@ int main() {
             // mouse wheel
             if (event.type == SDL_MOUSEWHEEL) {
                 if (event.wheel.y > 0) {
-                    scene.camera.moveForwardBackward(CAM_SPEED*7);
+                    currObject->moveForwardBackward(CAM_SPEED*7);
                 } else if (event.wheel.y < 0) {
-                    scene.camera.moveForwardBackward(-CAM_SPEED*7);
+                    currObject->moveForwardBackward(-CAM_SPEED*7);
                 }
             }
 
@@ -87,40 +111,43 @@ int main() {
             }
         }
 
+        // camera control
         // WASD movement
         state = SDL_GetKeyboardState(NULL);
         if (state[SDL_SCANCODE_W]) {
-            scene.camera.moveForwardBackward(CAM_SPEED);
+            currObject->moveForwardBackward(CAM_SPEED);
         }
         if (state[SDL_SCANCODE_A]) {
-            scene.camera.moveRightLeft(-CAM_SPEED);
+            currObject->moveRightLeft(-CAM_SPEED);
         }
         if (state[SDL_SCANCODE_S]) {
-            scene.camera.moveForwardBackward(-CAM_SPEED);
+            currObject->moveForwardBackward(-CAM_SPEED);
         }
         if (state[SDL_SCANCODE_D]) {
-            scene.camera.moveRightLeft(CAM_SPEED);
+            currObject->moveRightLeft(CAM_SPEED);
         }
         if (state[SDL_SCANCODE_SPACE]) {
-            scene.camera.moveUpDown(CAM_SPEED);
+            currObject->moveUpDown(CAM_SPEED);
         }
         if (state[SDL_SCANCODE_LSHIFT]) {
-            scene.camera.moveUpDown(-CAM_SPEED);
+            currObject->moveUpDown(-CAM_SPEED);
         }
 
-        // camera control
+        // mouse movement
         int dx, dy;
         SDL_GetRelativeMouseState(&dx, &dy);
         mouse = SDL_GetMouseState(NULL, NULL);
 
         if (cameraControl) {
-            if (dx) scene.camera.rotateYaw(-0.001f * dx);
-            if (dy) scene.camera.rotatePitch(-0.001f * dy);
+            if (dx) currObject->rotateYaw(-0.001f * dx);
+            if (dy) currObject->rotatePitch(-0.001f * dy);
         }
 
-        scene.toProjectingScene();
+        scene.update();
+
+        ui.build();
         
-        canvas.toRasterizRender(scene.getPolygons(), scene.getPolygons());
+        canvas.toRasterizRender(scene.getProjFromCurrCamera(), ui.getPixels());
         
         SDL_Delay(10);
     }

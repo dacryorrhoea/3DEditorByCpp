@@ -24,4 +24,83 @@ struct Vertex {
         y = ny;
         z = nz;
     }
+
+    constexpr Vertex operator+(const Vertex& o) const noexcept {
+        return {x + o.x, y + o.y, z + o.z};
+    }
+
+    constexpr Vertex operator-(const Vertex& o) const noexcept {
+        return {x - o.x, y - o.y, z - o.z};
+    }
+
+    constexpr Vertex operator*(const Vertex& o) const noexcept {
+        return {x * o.x, y * o.y, z * o.z};
+    }
+
+    constexpr Vertex operator/(const Vertex& o) const noexcept {
+        return {x / o.x, y / o.y, z / o.z};
+    }
+
+    constexpr Vertex operator+(float s) const noexcept {
+        return {x + s, y + s, z + s};
+    }
+
+    constexpr Vertex operator-(float s) const noexcept {
+        return {x - s, y - s, z - s};
+    }
+
+    constexpr Vertex operator*(float s) const noexcept {
+        return {x * s, y * s, z * s};
+    }
+
+    constexpr Vertex operator/(float s) const noexcept {
+        return {x / s, y / s, z / s};
+    }
+
+    constexpr Vertex& operator+=(const Vertex& o) noexcept {
+        x += o.x;
+        y += o.y;
+        z += o.z;
+        return *this;
+    }
+
+    constexpr Vertex& operator-=(const Vertex& o) noexcept {
+        x -= o.x;
+        y -= o.y;
+        z -= o.z;
+        return *this;
+    }
+
+    constexpr Vertex& operator*=(float s) noexcept {
+        x *= s;
+        y *= s;
+        z *= s;
+        return *this;
+    }
+
+    constexpr Vertex& operator/=(float s) noexcept {
+        x /= s;
+        y /= s;
+        z /= s;
+        return *this;
+    }
+
+    constexpr float dot(const Vertex& o) const noexcept {
+        return x * o.x + y * o.y + z * o.z;
+    }
+
+    void normalized() noexcept {
+        float l = std::sqrt(x*x + y*y + z*z);
+        x /= l;
+        y /= l;
+        z /= l;
+    }
+
+    constexpr Vertex cross(const Vertex& o) const noexcept {
+        return {
+            y * o.z - z * o.y,
+            z * o.x - x * o.z,
+            x * o.y - y * o.x
+        };
+    }
 };
