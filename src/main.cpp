@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "sup_class/app_context.h"
+#include "objects/cube.h"
 #include "objects/model.h"
 #include "scene/scene.h"
 #include "ui.h"
@@ -31,7 +32,8 @@ int main() {
         app_context.font
     );
 
-    scene.addModel("./cube.obj");
+    scene.addCube();
+    // scene.addModel("./cube.obj");
 
     bool running = true;
     SDL_Event event;

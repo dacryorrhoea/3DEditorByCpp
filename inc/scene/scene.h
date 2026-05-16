@@ -6,6 +6,7 @@
 #include "geometry/vertex.h"
 #include "objects/camera.h"
 #include "objects/model.h"
+#include "objects/cube.h"
 
 class Scene {
 private:
@@ -38,6 +39,10 @@ public:
 
     void addModel(const std::string& path) {
         objects.push_back(std::make_unique<Model>(path));
+    }
+
+    void addCube() {
+        objects.push_back(std::make_unique<Cube>());
     }
 
 
