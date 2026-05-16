@@ -33,7 +33,7 @@ int main() {
     );
 
     scene.addCube();
-    // scene.addModel("./cube.obj");
+    scene.addModel("./cube.obj");
 
     bool running = true;
     SDL_Event event;

@@ -31,9 +31,7 @@ private:
     std::vector<Button> buttons;
 
 public:
-    UI(int w, int h, TTF_Font* font)
-        : W(w), H(h), font(font)
-    {
+    UI(int w, int h, TTF_Font* font): W(w), H(h), font(font) {
         pixels = new Uint32[W * H];
         clear();
     }

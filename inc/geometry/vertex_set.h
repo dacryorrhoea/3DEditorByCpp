@@ -30,7 +30,4 @@ public:
     ) noexcept {
         //
     }
-
-    std::vector<Vertex>& getVertices() noexcept { return vertices; }
-    const std::vector<Vertex>& getVertices() const noexcept { return vertices; }
 };
