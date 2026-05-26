@@ -29,7 +29,7 @@ AppContext::AppContext(int w, int h) {
     }
 
     font = TTF_OpenFont(
-        "/usr/share/fonts/google-droid-sans-fonts/DroidSans.ttf",
+        "./data/DroidSans.ttf",
         24
     );
     if (!font) {
