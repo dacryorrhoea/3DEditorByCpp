@@ -26,7 +26,9 @@ public:
                 0, 3, 7, 0, 7, 4
             }
         )
-    {}
+    {
+        color = 0xFFFF22FF;
+    }
 
     std::string getName() const override { return "Cube"; }
 };

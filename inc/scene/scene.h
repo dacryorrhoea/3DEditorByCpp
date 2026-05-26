@@ -4,9 +4,7 @@
 #include "sup_class/custom_types.h"
 #include "geometry/mesh.h"
 #include "geometry/vertex.h"
-#include "objects/camera.h"
-#include "objects/model.h"
-#include "objects/cube.h"
+#include "objects/all_objects.h"
 
 class Scene {
 private:
@@ -18,6 +16,7 @@ public:
         auto cam = std::make_unique<Camera>(w, h, true);
         camera = cam.get();
         objects.push_back(std::move(cam));
+        objects.push_back(std::move(std::make_unique<Ground>()));
     }
 
     std::vector<Object*> getObjects() {

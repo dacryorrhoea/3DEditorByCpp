@@ -84,8 +84,17 @@ void Canvas::toRasterizRender(
     SDL_UpdateTexture(texture, NULL, pixels_buffer, W * sizeof(Uint32));
     SDL_RenderCopy(renderer, texture, NULL, NULL);
 
-    SDL_SetRenderDrawColor(renderer, 255, 105, 180, 255);
+    Uint32 color = 0;
+
     for (const Polygon& pol : scene_proj) {
+        if (color != pol.color) {
+            Uint8 r = (pol.color >> 24) & 0xFF;
+            Uint8 g = (pol.color >> 16) & 0xFF;
+            Uint8 b = (pol.color >> 8)  & 0xFF;
+            Uint8 a = pol.color & 0xFF;
+
+            SDL_SetRenderDrawColor(renderer, r, g, b, a);
+        }
         SDL_RenderDrawLine(renderer, pol.p1.x, pol.p1.y, pol.p2.x, pol.p2.y);
         SDL_RenderDrawLine(renderer, pol.p2.x, pol.p2.y, pol.p3.x, pol.p3.y);
         SDL_RenderDrawLine(renderer, pol.p3.x, pol.p3.y, pol.p1.x, pol.p1.y);

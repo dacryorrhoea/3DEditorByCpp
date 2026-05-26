@@ -8,15 +8,13 @@
 #include <sstream>
 #include <cmath>
 #include "vertex.h"
-#include "vertex_set.h"
-
-struct Faces {
-    int f1, f2, f3;
-};
+#include "faces.h"
 
 
-class Mesh : public VertexSet {
+
+class Mesh {
 protected:
+    std::vector<Vertex> vertices;
     std::vector<Faces> faces;
 
     void shiftX(float shift) {
@@ -81,9 +79,31 @@ protected:
             0.0f,  0.0f, 0.0f, 1.0f
         });
     }
+
+    void transformVertexSet(const std::array<float, 16>& m) noexcept {
+        for (auto& v : vertices) {
+            v.transformVertex(m);
+        }
+    }
+
+    void transformVertexSubset(
+        const std::array<float, 16>& m,
+        const int begin,
+        const int end
+    ) noexcept {
+        //
+    }
+
 public:
-    Mesh(const std::vector<float>& v, const std::vector<int>& f) : VertexSet(v)  {
-        if (f.size() % 3 != 0) throw std::invalid_argument("must be multiples of 3");
+    Mesh(const std::vector<float>& v, const std::vector<int>& f) {
+        if (f.size() % 3 != 0 || v.size() % 3 != 0)
+            throw std::invalid_argument("must be multiples of 3");
+
+        vertices.reserve(v.size() / 3);
+        for (size_t i = 0; i < v.size(); i += 3) {
+            vertices.emplace_back(v[i], v[i + 1], v[i + 2]);
+        }
+
         faces.reserve(f.size() / 3);
         for (size_t i = 0; i < f.size(); i += 3)
             faces.push_back({f[i], f[i+1], f[i+2]});

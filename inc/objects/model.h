@@ -61,7 +61,9 @@ private:
 
     explicit Model(FileData data) : Mesh(data.verts, data.faces) {}
 public:
-    explicit Model(const std::string& filepath) : Model(loadByExtension(filepath)) {}
+    explicit Model(const std::string& filepath) : Model(loadByExtension(filepath)) {
+        color = 0xFF69B4FF;
+    }
 
     std::string getName() const override { return "Model"; }
 };

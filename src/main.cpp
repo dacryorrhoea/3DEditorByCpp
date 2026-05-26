@@ -80,7 +80,7 @@ int main() {
             // mouse middle click
             if (
                 event.type == SDL_MOUSEBUTTONDOWN &&
-                event.button.button == SDL_BUTTON_MIDDLE
+                event.button.button == SDL_BUTTON_RIGHT
             ) {
                 SDL_SetRelativeMouseMode(SDL_TRUE);
                 cameraControl = true;
@@ -88,7 +88,7 @@ int main() {
 
             if (
                 event.type == SDL_MOUSEBUTTONUP &&
-                event.button.button == SDL_BUTTON_MIDDLE
+                event.button.button == SDL_BUTTON_RIGHT
             ) {
                 SDL_SetRelativeMouseMode(SDL_FALSE);
                 cameraControl = false;

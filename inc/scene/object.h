@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "geometry/mesh.h"
 #include "geometry/vertex.h"
 
@@ -8,11 +10,14 @@ class Object {
 protected:
     bool changed;
     bool renderable;
+
 public:
     Vertex position;
     Vertex forward;
     Vertex right;
     Vertex up;
+
+    Uint32 color;
 
     Object(const Vertex& pos = {}, bool rndrbl = true)
         : changed(false)
@@ -21,6 +26,7 @@ public:
         , forward(0.0f, 0.0f, -1.0f)
         , right(1.0f, 0.0f, 0.0f)
         , up(0.0f, 1.0f, 0.0f)
+        , color(0x808080FF)
     {}
 
     bool isChanged() {
