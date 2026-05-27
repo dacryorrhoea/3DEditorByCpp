@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include "sup_class/custom_types.h"
+#include "geometry/containers/polygons.h"
 #include "geometry/mesh.h"
 #include "geometry/vertex.h"
 #include "objects/all_objects.h"
@@ -9,6 +9,7 @@
 class Scene {
 private:
     std::vector<std::unique_ptr<Object>> objects;
+    LightSource* light_src = nullptr;
 public:
     Camera* camera = nullptr;
 
@@ -16,6 +17,11 @@ public:
         auto cam = std::make_unique<Camera>(w, h, true);
         camera = cam.get();
         objects.push_back(std::move(cam));
+
+        auto lsrc = std::make_unique<LightSource>(w, h, true);
+        light_src = lsrc.get();
+        objects.push_back(std::move(lsrc));
+
         objects.push_back(std::move(std::make_unique<Ground>()));
     }
 
@@ -25,6 +31,7 @@ public:
             out.push_back(obj.get());
         return out;
     }
+
 
     // add objects
     void addObject(std::unique_ptr<Object> obj) {
@@ -46,7 +53,7 @@ public:
 
 
     // projection work
-    const std::vector<Polygon>& getProjFromCurrCamera() {
+    const PolygonContainer& getProjFromCurrCamera() {
         return camera->getPolygons();
     }
 
@@ -59,6 +66,6 @@ public:
             }
         }
 
-        camera->toProjectingScene(sceneObjects);
+        camera->toProjectingScene(sceneObjects, *light_src);
     }
 };

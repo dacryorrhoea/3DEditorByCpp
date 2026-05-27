@@ -1,6 +1,7 @@
 #include "camera.h"
 #include "cube.h"
 #include "ground.h"
+#include "light_source.h"
 #include "model.h"
 #include "pyramid.h"
 #include "sphere.h"

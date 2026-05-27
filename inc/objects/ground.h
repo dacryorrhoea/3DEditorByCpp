@@ -37,7 +37,6 @@ private:
                 int i2 = i0 + rowSize;
                 int i3 = i2 + 1;
 
-                // два треугольника на одну клетку
                 faces.push_back(i0);
                 faces.push_back(i2);
                 faces.push_back(i1);
@@ -52,7 +51,7 @@ private:
     }
 
 public:
-    Ground(float size = 500.0f, int cells = 80)
+    Ground(float size = 500.0f, int cells = 120)
         : Mesh(makeVertices(size, cells), makeFaces(cells))
     {}
 

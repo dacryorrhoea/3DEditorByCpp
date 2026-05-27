@@ -46,7 +46,15 @@ int main() {
 
     Object* currObject = scene.getObjects()[0];
 
-    int btnY = 40;
+    ui.addButton(
+            0, 40, 200, 30,
+            "change mode",
+            [&canvas]() {
+                canvas.changeRastMode();
+            }
+    );
+
+    int btnY = 74;
     for (Object* obj : scene.getObjects()) {
         ui.addButton(
             0, btnY, 200, 30,
@@ -57,6 +65,8 @@ int main() {
         );
         btnY += 34;
     }
+
+    
 
     while (running) {
         while (SDL_PollEvent(&event)) {

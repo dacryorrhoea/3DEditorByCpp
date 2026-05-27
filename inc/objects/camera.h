@@ -1,6 +1,7 @@
 #pragma once
 
-#include "sup_class/custom_types.h"
+#include "geometry/containers/polygons.h"
+#include "objects/all_objects.h"
 #include "scene/object.h"
 #include "geometry/mesh.h"
 #include "geometry/vertex.h"
@@ -11,7 +12,8 @@ private:
     int W;
     int H;
     float focal;
-    std::vector<Polygon> polygons;
+    PolygonContainer polygons;
+
 public:
     Camera(int w, int h, bool active = false)
         : Object({0.5f, 0.5f, 80.0f}, false)
@@ -29,11 +31,11 @@ public:
         active_state = active;
     }
 
-    const std::vector<Polygon>& getPolygons() const {
+    const PolygonContainer& getPolygons() const {
         return polygons;
     }
 
     std::string getName() const override { return "Camera"; }
 
-    void toProjectingScene(const std::vector<Object*>& objects);
+    void toProjectingScene(const std::vector<Object*>& objects, const LightSource& light_src);
 };

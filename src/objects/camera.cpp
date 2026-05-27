@@ -3,8 +3,8 @@
 #include "objects/camera.h"
 #include "geometry/vertex.h"
 
-void Camera::toProjectingScene(const std::vector<Object*>& objects) {
-    polygons.clear();
+void Camera::toProjectingScene(const std::vector<Object*>& objects, const LightSource& light_src) {
+    polygons.Clear();
 
     const float HW = W * 0.5f;
     const float HH = H * 0.5f;
@@ -15,6 +15,7 @@ void Camera::toProjectingScene(const std::vector<Object*>& objects) {
         // if (!mesh) continue;
 
         std::vector<Vertex> verticesWorld;
+
         mesh->getTransformedVertices(
             obj->position,
             obj->forward,
@@ -22,6 +23,7 @@ void Camera::toProjectingScene(const std::vector<Object*>& objects) {
             obj->up,
             verticesWorld
         );
+
         std::vector<Faces> &faces = mesh->getFaces();
         std::vector<Vertex> verticesCamSpace(verticesWorld.size());
 
@@ -36,41 +38,41 @@ void Camera::toProjectingScene(const std::vector<Object*>& objects) {
 
         for (Faces &face : faces)
         {
-            Vertex v1 = verticesCamSpace[face.f1];
-            Vertex v2 = verticesCamSpace[face.f2];
-            Vertex v3 = verticesCamSpace[face.f3];
+            Vertex v1 = verticesWorld[face.f1];
+            Vertex v2 = verticesWorld[face.f2];
+            Vertex v3 = verticesWorld[face.f3];
 
-            // отсечение некоторого количества граней
-            const float nearPlane = 0.1f;
+            Vertex e1 = v2 - v1;
+            Vertex e2 = v3 - v1;
 
-            if (v1.z <= nearPlane || v2.z <= nearPlane || v3.z <= nearPlane)
-                continue;
+            Vertex normal = e1.cross(e2);
+            normal.normalized();
 
-            Vertex n;
-            n = (v2 - v1).cross(v3 - v1);
+            Vertex lightDir = light_src.forward;
+            lightDir.normalized();
 
-            if (std::abs(n.x) + std::abs(n.y) + std::abs(n.z) < 1e-6)
-                continue;
+            float brightness = abs(normal.dot(lightDir));
 
-            if (n.dot(v1) >= 0)
-                continue;
+            brightness = std::max(0.2f, brightness);
 
-            Polygon pol;
-            pol.p1.x = static_cast<int>((v1.x / v1.z) * focal + HW + 0.5f);
-            pol.p1.y = static_cast<int>(-(v1.y / v1.z) * focal + HH + 0.5f);
-            pol.p1.inv_z = 1 / v1.z;
+            Uint8 r = (obj->color >> 24) & 0xFF;
+            Uint8 g = (obj->color >> 16) & 0xFF;
+            Uint8 b = (obj->color >> 8)  & 0xFF;
+            Uint8 a = obj->color & 0xFF;
 
-            pol.p2.x = static_cast<int>((v2.x / v2.z) * focal + HW + 0.5f);
-            pol.p2.y = static_cast<int>(-(v2.y / v2.z) * focal + HH + 0.5f);
-            pol.p2.inv_z = 1 / v2.z;
+            r = Uint8(r * brightness);
+            g = Uint8(g * brightness);
+            b = Uint8(b * brightness);
 
-            pol.p3.x = static_cast<int>((v3.x / v3.z) * focal + HW + 0.5f);
-            pol.p3.y = static_cast<int>(-(v3.y / v3.z) * focal + HH + 0.5f);
-            pol.p3.inv_z = 1 / v3.z;
+            Uint32 litColor = (r << 24) | (g << 16) | (b << 8) | a;
 
-            pol.color = obj->color;
-
-            polygons.push_back(pol);
+            polygons.Add(
+                verticesCamSpace[face.f1],
+                verticesCamSpace[face.f2],
+                verticesCamSpace[face.f3],
+                focal, HW, HH,
+                litColor
+            );
         }
 
         const float axisLen = 1.7f;
@@ -133,39 +135,13 @@ void Camera::toProjectingScene(const std::vector<Object*>& objects) {
 
             for (Faces& face : boxFaces)
             {
-                Vertex v1 = boxCam[face.f1];
-                Vertex v2 = boxCam[face.f2];
-                Vertex v3 = boxCam[face.f3];
-
-                const float nearPlane = 0.1f;
-                if (v1.z <= nearPlane || v2.z <= nearPlane || v3.z <= nearPlane)
-                    continue;
-
-                Vertex n = (v2 - v1).cross(v3 - v1);
-
-                if (std::abs(n.x) + std::abs(n.y) + std::abs(n.z) < 1e-6f)
-                    continue;
-
-                if (n.dot(v1) >= 0)
-                    continue;
-
-                Polygon pol;
-
-                pol.p1.x = static_cast<int>((v1.x / v1.z) * focal + HW + 0.5f);
-                pol.p1.y = static_cast<int>(-(v1.y / v1.z) * focal + HH + 0.5f);
-                pol.p1.inv_z = 1.0f / v1.z;
-
-                pol.p2.x = static_cast<int>((v2.x / v2.z) * focal + HW + 0.5f);
-                pol.p2.y = static_cast<int>(-(v2.y / v2.z) * focal + HH + 0.5f);
-                pol.p2.inv_z = 1.0f / v2.z;
-
-                pol.p3.x = static_cast<int>((v3.x / v3.z) * focal + HW + 0.5f);
-                pol.p3.y = static_cast<int>(-(v3.y / v3.z) * focal + HH + 0.5f);
-                pol.p3.inv_z = 1.0f / v3.z;
-
-                pol.color = axis.color;
-
-                polygons.push_back(pol);
+                polygons.Add(
+                    boxCam[face.f1],
+                    boxCam[face.f2],
+                    boxCam[face.f3],
+                    focal, HW, HH,
+                    axis.color
+                );
             }
         }
     }

@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "sup_class/custom_types.h"
+#include "geometry/containers/polygons.h"
 
 class Canvas {
 private:
@@ -10,6 +10,7 @@ private:
     size_t buffer_size;
     SDL_Renderer* renderer;
     SDL_Texture* texture;
+    bool rast_mode;
 public:
     Canvas(int w, int h, SDL_Renderer* renderer, SDL_Texture* texture)
         : W(w)
@@ -19,6 +20,7 @@ public:
         , buffer_size(static_cast<size_t>(w) * static_cast<size_t>(h))
         , renderer(renderer)
         , texture(texture)
+        , rast_mode(true)
     {
         pixels_buffer = new Uint32[buffer_size];
         z_buffer = new float[buffer_size];
@@ -30,9 +32,21 @@ public:
         delete[] pixels_buffer;
         pixels_buffer = nullptr;
     }
+
+    void changeRastMode() {
+        if (rast_mode) {
+            rast_mode = false;
+        } else {
+            rast_mode = true; 
+        }
+    }
+
+    void rastFillMode(const PolygonContainer& scene_proj);
+
+    void rastWireframeMode(const PolygonContainer& scene_proj);
     
     void toRasterizRender(
-        std::vector<Polygon> scene_proj,
+        const PolygonContainer& scene_proj,
         Uint32* ui_buffer
     );
 
