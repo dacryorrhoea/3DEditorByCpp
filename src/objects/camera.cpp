@@ -71,6 +71,7 @@ void Camera::toProjectingScene(const std::vector<Object*>& objects, const LightS
                 verticesCamSpace[face.f2],
                 verticesCamSpace[face.f3],
                 focal, HW, HH,
+                obj->color,
                 litColor
             );
         }
@@ -140,6 +141,7 @@ void Camera::toProjectingScene(const std::vector<Object*>& objects, const LightS
                     boxCam[face.f2],
                     boxCam[face.f3],
                     focal, HW, HH,
+                    axis.color,
                     axis.color
                 );
             }

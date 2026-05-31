@@ -60,7 +60,7 @@ void Canvas::rastFillMode(const PolygonContainer& scene_proj) {
                     float inv_z = e2 * wk1 + e3 * wk2 + e1 * wk3;
                     if (z_buffer[pos] < inv_z) {
                         z_buffer[pos] = inv_z;
-                        pixels_buffer[pos] = pol.color;
+                        pixels_buffer[pos] = pol.flat_shading;
                     }
                 }
 
@@ -89,11 +89,11 @@ void Canvas::rastWireframeMode(const PolygonContainer& scene_proj) {
         Uint32 color = 0;
 
         for (auto& pol : scene_proj) {
-            if (color != pol.color) {
-                Uint8 r = (pol.color >> 24) & 0xFF;
-                Uint8 g = (pol.color >> 16) & 0xFF;
-                Uint8 b = (pol.color >> 8)  & 0xFF;
-                Uint8 a = pol.color & 0xFF;
+            if (color != pol.solid_color) {
+                Uint8 r = (pol.solid_color >> 24) & 0xFF;
+                Uint8 g = (pol.solid_color >> 16) & 0xFF;
+                Uint8 b = (pol.solid_color >> 8)  & 0xFF;
+                Uint8 a = pol.solid_color & 0xFF;
 
                 SDL_SetRenderDrawColor(renderer, r, g, b, a);
             }

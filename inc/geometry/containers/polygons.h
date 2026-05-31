@@ -12,7 +12,8 @@ public:
              const float focal,
              const int HW,
              const int HH,
-             Uint32 color) 
+             Uint32 solid_color,
+             Uint32 flat_shading) 
     {
         // отсечение некоторого количества граней
         const float nearPlane = 0.1f;
@@ -42,7 +43,8 @@ public:
         pol.p3.y = static_cast<int>(-(v3.y / v3.z) * focal + HH + 0.5f);
         pol.p3.inv_z = 1 / v3.z;
 
-        pol.color = color;
+        pol.solid_color = solid_color;
+        pol.flat_shading = flat_shading;
 
         storage.push_back(pol);
     }

@@ -32,32 +32,62 @@ int main() {
         app_context.font
     );
 
-    scene.addCube();
-    scene.addModel("./data/cube.obj");
 
     bool running = true;
     SDL_Event event;
     const Uint8* state = SDL_GetKeyboardState(NULL);
     Uint32 mouse;
     bool cameraControl = false;
-
     
     ui.clearButtons();
 
     Object* currObject = scene.getObjects()[0];
 
+    // buttons
     ui.addButton(
-            0, 40, 200, 30,
+            0, 0, 180, 30,
             "change mode",
             [&canvas]() {
                 canvas.changeRastMode();
+            }
+    );
+    
+    ui.addButton(
+            200, 0, 180, 30,
+            "add model",
+            [&scene]() {
+                scene.addModel("./data/cube.obj");
+            }
+    );
+
+    ui.addButton(
+            400, 0, 180, 30,
+            "add cube",
+            [&scene]() {
+                scene.addCube();
+            }
+    );
+
+    ui.addButton(
+            600, 0, 180, 30,
+            "add sphere",
+            [&scene]() {
+                scene.addCube();
+            }
+    );
+
+    ui.addButton(
+            800, 0, 180, 30,
+            "add pyramid",
+            [&scene]() {
+                scene.addCube();
             }
     );
 
     int btnY = 74;
     for (Object* obj : scene.getObjects()) {
         ui.addButton(
-            0, btnY, 200, 30,
+            0, btnY, 180, 30,
             obj->getName(),
             [&currObject, obj]() {
                 currObject = obj;
@@ -67,7 +97,7 @@ int main() {
     }
 
     
-
+    // events hendler
     while (running) {
         while (SDL_PollEvent(&event)) {
             // system close button
