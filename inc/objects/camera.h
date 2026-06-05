@@ -1,10 +1,10 @@
 #pragma once
 
-#include "geometry/containers/polygons.h"
+#include <algorithm>
+#include "containers/polygons.h"
 #include "objects/all_objects.h"
 #include "scene/object.h"
 #include "geometry/mesh.h"
-#include "geometry/vertex.h"
 
 struct Camera : public Object {
 private:
@@ -16,12 +16,19 @@ private:
 
 public:
     Camera(int w, int h, bool active = false)
-        : Object({0.5f, 0.5f, 80.0f}, false)
+        : Object({0.5f, 0.5f, 80.0f}, false, false)
         , active_state(active)
         , W(w)
         , H(h)
-        , focal( (w * 0.5f) / std::tan( (80.0f * 3.14159265358979323846f / 180.0f) * 0.5f ) )
-    {}
+        , focal(
+            (w * 0.5f)
+            / std::tan(
+                (80.0f * 3.14159265358979323846f / 180.0f) * 0.5f
+            )
+        )
+    {
+        object_name = "Camera";
+    }
 
     bool getCamActiveState() {
         return active_state;
@@ -35,7 +42,15 @@ public:
         return polygons;
     }
 
-    std::string getName() const override { return "Camera"; }
+    std::vector<int> selectVertex(int x, int y, Object* obj);
 
-    void toProjectingScene(const std::vector<Object*>& objects, const LightSource& light_src);
+    void getVerticesCamSpace(
+        const VertexContainer& vertW,
+        VertexContainer& vertCamSpace
+    );
+
+    void toProjectingScene(
+        const std::vector<Object*>& objects,
+        const LightSource& light_src
+    );
 };

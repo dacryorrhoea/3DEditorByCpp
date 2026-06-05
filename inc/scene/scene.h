@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cmath>
-#include "geometry/containers/polygons.h"
+#include <algorithm>
+#include <memory>
+#include "containers/polygons.h"
 #include "geometry/mesh.h"
 #include "geometry/vertex.h"
 #include "objects/all_objects.h"
@@ -43,6 +45,20 @@ public:
         objects.push_back(std::move(obj));
     }
 
+    void removeObject(Object* target) {
+        auto it = std::find_if(
+            objects.begin(),
+            objects.end(),
+            [target](const std::unique_ptr<Object>& obj) {
+                return obj.get() == target;
+            }
+        );
+
+        if (it != objects.end()) {
+            objects.erase(it);
+        }
+    }
+
     void addModel(const std::string& path) {
         objects.push_back(std::make_unique<Model>(path));
     }
@@ -51,6 +67,10 @@ public:
         objects.push_back(std::make_unique<Cube>());
     }
 
+    // scene options
+    void mergeScene();
+    void saveScene();
+    void rollbackScene();
 
     // projection work
     const PolygonContainer& getProjFromCurrCamera() {

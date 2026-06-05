@@ -97,9 +97,15 @@ void Canvas::rastWireframeMode(const PolygonContainer& scene_proj) {
 
                 SDL_SetRenderDrawColor(renderer, r, g, b, a);
             }
-            SDL_RenderDrawLine(renderer, pol.p1.x, pol.p1.y, pol.p2.x, pol.p2.y);
-            SDL_RenderDrawLine(renderer, pol.p2.x, pol.p2.y, pol.p3.x, pol.p3.y);
-            SDL_RenderDrawLine(renderer, pol.p3.x, pol.p3.y, pol.p1.x, pol.p1.y);
+            SDL_RenderDrawLine(
+                renderer, pol.p1.x, pol.p1.y, pol.p2.x, pol.p2.y
+            );
+            SDL_RenderDrawLine(
+                renderer, pol.p2.x, pol.p2.y, pol.p3.x, pol.p3.y
+            );
+            SDL_RenderDrawLine(
+                renderer, pol.p3.x, pol.p3.y, pol.p1.x, pol.p1.y
+            );
         }
 }
 
@@ -125,7 +131,9 @@ void Canvas::toRasterizRender(
             pixels_buffer[i] = px;
         }
 
-        SDL_UpdateTexture(texture, nullptr, pixels_buffer, W * sizeof(Uint32));
+        SDL_UpdateTexture(
+            texture, nullptr, pixels_buffer, W * sizeof(Uint32)
+        );
         SDL_RenderCopy(renderer, texture, nullptr, nullptr);
     } else {
 
@@ -138,7 +146,9 @@ void Canvas::toRasterizRender(
             pixels_buffer[i] = px;
         }
         
-        SDL_UpdateTexture(texture, nullptr, pixels_buffer, W * sizeof(Uint32));
+        SDL_UpdateTexture(
+            texture, nullptr, pixels_buffer, W * sizeof(Uint32)
+        );
         SDL_RenderCopy(renderer, texture, nullptr, nullptr);
 
         rastWireframeMode(scene_proj);

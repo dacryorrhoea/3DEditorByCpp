@@ -2,9 +2,6 @@
 #include "sup_class/app_context.h"
 
 AppContext::AppContext(int w, int h) {
-    window_w = w;
-    window_h = h;
-    
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         fail = true;
         return;
@@ -15,6 +12,12 @@ AppContext::AppContext(int w, int h) {
         fail = true;
         return;
     }
+
+    SDL_DisplayMode dm;
+    SDL_GetCurrentDisplayMode(0, &dm);
+
+    window_w = (w > 0) ? w : dm.w;
+    window_h = (h > 0) ? h : dm.h;
 
     window = SDL_CreateWindow(
         "(X_X)",

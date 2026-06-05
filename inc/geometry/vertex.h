@@ -1,7 +1,9 @@
 #pragma once
 
 struct Vertex {
-    float x, y, z;
+    float x;
+    float y;
+    float z;
 
     constexpr Vertex(
         float nx = 0.0f,
@@ -31,14 +33,6 @@ struct Vertex {
 
     constexpr Vertex operator-(const Vertex& o) const noexcept {
         return {x - o.x, y - o.y, z - o.z};
-    }
-
-    constexpr Vertex operator*(const Vertex& o) const noexcept {
-        return {x * o.x, y * o.y, z * o.z};
-    }
-
-    constexpr Vertex operator/(const Vertex& o) const noexcept {
-        return {x / o.x, y / o.y, z / o.z};
     }
 
     constexpr Vertex operator+(float s) const noexcept {
@@ -102,5 +96,10 @@ struct Vertex {
             z * o.x - x * o.z,
             x * o.y - y * o.x
         };
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vertex& v) {
+        os << v.x << ' ' << v.y << ' ' << v.z;
+        return os;
     }
 };

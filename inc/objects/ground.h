@@ -53,7 +53,8 @@ private:
 public:
     Ground(float size = 500.0f, int cells = 120)
         : Mesh(makeVertices(size, cells), makeFaces(cells))
-    {}
-
-    std::string getName() const override { return "Ground"; }
+    {
+        object_name = "Ground";
+        editeble = false;
+    }
 };

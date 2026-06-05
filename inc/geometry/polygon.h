@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+// #include 
 
 struct Polygon {
     struct Point {
@@ -8,6 +9,10 @@ struct Polygon {
         int y;
         float inv_z;
     };
+
+    int sv1;
+    int sv2;
+    int sv3;
     
     Point p1;
     Point p2;

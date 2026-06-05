@@ -9,9 +9,10 @@ private:
 
 public:
     LightSource(int w, int h, bool active = false)
-        : Object({0.0f, 0.0f, 0.0f}, false)
+        : Object({0.0f, 0.0f, 0.0f}, false, false, false)
         , active_state(active)
     {
+        object_name = "LightSource";
         forward = Vertex(-1.0f, -1.0f, -1.0f);
         right   = Vertex(1.0f, 0.0f, 0.0f);
         up      = Vertex(0.0f, 0.0f, 1.0f);
@@ -24,6 +25,4 @@ public:
     void setLSActiveState(bool active) {
         active_state = active;
     }
-
-    std::string getName() const override { return "LightSource"; }
 };

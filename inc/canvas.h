@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "geometry/containers/polygons.h"
+#include "containers/polygons.h"
 
 class Canvas {
 private:

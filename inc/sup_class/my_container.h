@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <initializer_list>
 
 template<typename T> class MyContainer {
 protected:
@@ -8,6 +9,14 @@ protected:
 
 public:
     MyContainer() = default;
+
+    MyContainer(size_t size) {
+        storage.resize(size);
+    }
+
+    MyContainer(std::initializer_list<T> list) {
+        storage = list;
+    }
 
     void Add(const T& value) {
         storage.push_back(value);
@@ -32,6 +41,8 @@ public:
     size_t Size() const {
         return storage.size();
     }
+
+    MyContainer& operator=(const MyContainer&) = default;
 
     auto begin() {
         return storage.begin();

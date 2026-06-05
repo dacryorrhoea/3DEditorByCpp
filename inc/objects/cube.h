@@ -27,8 +27,7 @@ public:
             }
         )
     {
+        object_name = "Cube";
         color = 0xFFFF22FF;
     }
-
-    std::string getName() const override { return "Cube"; }
 };
