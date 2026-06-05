@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene/object.h"
+#include "object.h"
 #include "geometry/mesh.h"
 
 class Cube : public Object, public Mesh {

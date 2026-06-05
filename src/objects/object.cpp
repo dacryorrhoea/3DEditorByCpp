@@ -1,6 +1,6 @@
 #include "sup_class/pch.h"
 
-#include "scene/object.h"
+#include "objects/object.h"
 
 void Object::rotateYaw(float angle) {
     float sinA = std::sin(angle);

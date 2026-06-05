@@ -4,8 +4,6 @@
 #include <string>
 
 #include "geometry/mesh.h"
-#include "geometry/vertex.h"
-
 
 class Object {
 protected:

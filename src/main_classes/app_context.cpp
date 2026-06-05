@@ -1,5 +1,5 @@
 #include "sup_class/pch.h"
-#include "sup_class/app_context.h"
+#include "main_classes/app_context.h"
 
 AppContext::AppContext(int w, int h) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {

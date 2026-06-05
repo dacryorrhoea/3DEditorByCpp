@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include "scene/object.h"
+#include "object.h"
 #include "geometry/mesh.h"
 
 class Model : public Object, public Mesh {

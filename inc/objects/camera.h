@@ -3,7 +3,6 @@
 #include <algorithm>
 #include "containers/polygons.h"
 #include "objects/all_objects.h"
-#include "scene/object.h"
 #include "geometry/mesh.h"
 
 struct Camera : public Object {

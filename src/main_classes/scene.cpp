@@ -1,7 +1,5 @@
 #include "sup_class/pch.h"
-
-#include "scene/scene.h"
-
+#include "main_classes/scene.h"
 
 void Scene::mergeScene() {
     Mesh merged_mesh;

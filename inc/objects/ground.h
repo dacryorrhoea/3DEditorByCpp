@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include "scene/object.h"
+#include "object.h"
 #include "geometry/mesh.h"
 
 class Ground : public Object, public Mesh {

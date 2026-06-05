@@ -1,3 +1,4 @@
+#include "object.h"
 #include "camera.h"
 #include "cube.h"
 #include "ground.h"

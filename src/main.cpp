@@ -1,6 +1,4 @@
-#include "sup_class/pch.h"
-
-#include "sdl_app.h"
+#include "main_classes/sdl_app.h"
 
 int main() {
     SDLApp app;

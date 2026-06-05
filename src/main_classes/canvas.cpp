@@ -1,6 +1,6 @@
 #include "sup_class/pch.h"
 
-#include "canvas.h"
+#include "main_classes/canvas.h"
 
 void Canvas::rastFillMode(const PolygonContainer& scene_proj) {
     const int SCALE = 2;

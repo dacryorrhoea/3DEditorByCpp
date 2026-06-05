@@ -1,12 +1,11 @@
 #pragma once
 
 #include <memory>
-#include "sup_class/app_context.h"
-#include "objects/cube.h"
-#include "objects/model.h"
-#include "scene/scene.h"
-#include "ui.h"
-#include "canvas.h"
+#include "objects/all_objects.h"
+#include "main_classes/app_context.h"
+#include "main_classes/scene.h"
+#include "main_classes/ui.h"
+#include "main_classes/canvas.h"
 
 class SDLApp {
 private:

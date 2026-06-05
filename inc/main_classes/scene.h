@@ -4,8 +4,6 @@
 #include <algorithm>
 #include <memory>
 #include "containers/polygons.h"
-#include "geometry/mesh.h"
-#include "geometry/vertex.h"
 #include "objects/all_objects.h"
 
 class Scene {

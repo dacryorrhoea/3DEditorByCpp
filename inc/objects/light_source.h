@@ -1,7 +1,6 @@
 #pragma once
 
-#include "scene/object.h"
-#include "geometry/vertex.h"
+#include "object.h"
 
 struct LightSource : public Object {
 private:
