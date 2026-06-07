@@ -15,7 +15,4 @@ public:
 
     AppContext(int w = 0, int h = 0);
     ~AppContext();
-
-    AppContext(const AppContext&) = delete;
-    AppContext& operator=(const AppContext&) = delete;
 };

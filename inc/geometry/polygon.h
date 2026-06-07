@@ -9,10 +9,6 @@ struct Polygon {
         float inv_z;
     };
 
-    int sv1;
-    int sv2;
-    int sv3;
-    
     Point p1;
     Point p2;
     Point p3;

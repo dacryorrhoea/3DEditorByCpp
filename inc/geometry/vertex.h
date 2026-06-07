@@ -27,6 +27,10 @@ struct Vertex {
         z = nz;
     }
 
+    constexpr Vertex operator*(float s) const noexcept {
+        return {x * s, y * s, z * s};
+    }
+
     constexpr Vertex operator+(const Vertex& o) const noexcept {
         return {x + o.x, y + o.y, z + o.z};
     }
@@ -35,47 +39,10 @@ struct Vertex {
         return {x - o.x, y - o.y, z - o.z};
     }
 
-    constexpr Vertex operator+(float s) const noexcept {
-        return {x + s, y + s, z + s};
-    }
-
-    constexpr Vertex operator-(float s) const noexcept {
-        return {x - s, y - s, z - s};
-    }
-
-    constexpr Vertex operator*(float s) const noexcept {
-        return {x * s, y * s, z * s};
-    }
-
-    constexpr Vertex operator/(float s) const noexcept {
-        return {x / s, y / s, z / s};
-    }
-
     constexpr Vertex& operator+=(const Vertex& o) noexcept {
         x += o.x;
         y += o.y;
         z += o.z;
-        return *this;
-    }
-
-    constexpr Vertex& operator-=(const Vertex& o) noexcept {
-        x -= o.x;
-        y -= o.y;
-        z -= o.z;
-        return *this;
-    }
-
-    constexpr Vertex& operator*=(float s) noexcept {
-        x *= s;
-        y *= s;
-        z *= s;
-        return *this;
-    }
-
-    constexpr Vertex& operator/=(float s) noexcept {
-        x /= s;
-        y /= s;
-        z /= s;
         return *this;
     }
 

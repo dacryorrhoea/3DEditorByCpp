@@ -17,35 +17,48 @@ private:
 
     static FileData loadFromObj(const std::string& fpath) {
         std::ifstream file(fpath);
-        if (!file.is_open()) throw std::runtime_error("Cannot open file");
+        if (!file.is_open()) throw std::runtime_error(
+            "Cannot open file" + fpath
+        );
 
         FileData data;
         std::string line;
 
-        while (std::getline(file, line)) {
-            if (line.empty()) continue;
-            if (line[0] == '#') continue;
-
+        // индекс строки нужен для указания в ошибках
+        for (int str_i = 1; std::getline(file, line); str_i++)
+        {
+            // извлечение первого слова в строке
+            // если отдельного слова нет то следующая строка
             std::stringstream ss(line);
             std::string prefix;
             if (!(ss >> prefix)) continue;
-
-            if (prefix == "v") {
+            
+            // строки с вершинами начинаются с символа v
+            // строки с гранями начинаются с символа f
+            // иные строки пропускаются 
+            if (prefix == "v")
+            {
                 float x, y, z;
-                if (!(ss >> x >> y >> z)) {
-                    throw std::runtime_error("Bad vertex line: " + line);
-                }
-                data.verts.insert(data.verts.end(), { x, y, z });
+                if (!(ss >> x >> y >> z) || (ss >> std::ws).peek() != EOF)
+                {
+                    throw std::runtime_error(
+                        "Bad vertex in line " +
+                        std::to_string(str_i) +
+                        ": " + line
+                    );
+                } 
+                data.verts.insert(data.verts.end(), {x, y, z});
             }
-            else if (prefix == "f") {
+            else if (prefix == "f")
+            {
                 std::vector<int> idx;
-                std::string token;
-
-                const int vertexCount = static_cast<int>(
+                int vertexCount = static_cast<int>(
                     data.verts.size() / 3
                 );
 
-                while (ss >> token) {
+                std::string token;
+                while (ss >> token)
+                {
                     if (token.empty()) continue;
 
                     size_t p = token.find('/');
@@ -56,23 +69,29 @@ private:
                     if (vstr.empty()) continue;
 
                     int vi;
-                    try {
+                    try
+                    {
                         vi = std::stoi(vstr);
                     }
-                    catch (...) {
+                    catch (...)
+                    {
                         throw std::runtime_error(
-                            "Bad face token: " + token
+                            "Bad face token in line in" +
+                            std::to_string(str_i) +
+                            ": " + token
                         );
                     }
 
-                    if (vi < 0) {
-                        vi = vertexCount + vi;
-                    } else {
-                        vi = vi - 1;
-                    }
+                    if (vi < 0) vi = vertexCount + vi;
+                    else vi = vi - 1;
 
-                    if (vi < 0 || vi >= vertexCount) {
-                        throw std::runtime_error("Face index out of range: " + token);
+                    if (vi < 0 || vi >= vertexCount)
+                    {
+                        throw std::runtime_error(
+                            "Face index out of range in line " +
+                            std::to_string(str_i) +
+                            ": " + token
+                        );
                     }
 
                     idx.push_back(vi);

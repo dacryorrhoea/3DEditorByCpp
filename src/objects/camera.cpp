@@ -170,9 +170,6 @@ void Camera::toProjectingScene(
                 verticesCamSpace[face.f1],
                 verticesCamSpace[face.f2],
                 verticesCamSpace[face.f3],
-                face.f1,
-                face.f2,
-                face.f3,
                 focal, HW, HH,
                 obj->color,
                 litColor
@@ -243,9 +240,6 @@ void Camera::toProjectingScene(
                     boxCam[face.f1],
                     boxCam[face.f2],
                     boxCam[face.f3],
-                    face.f1,
-                    face.f2,
-                    face.f3,
                     focal, HW, HH,
                     axis.color,
                     axis.color

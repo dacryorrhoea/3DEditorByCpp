@@ -116,7 +116,7 @@ void Canvas::toRasterizRender(
     if (!ui_buffer) return;
 
     SDL_RenderClear(renderer);
-    std::fill_n(pixels_buffer, buffer_size, 0x101010FF);
+    std::fill_n(pixels_buffer, buffer_size, 0xB0B0B0FF);
     std::fill_n(z_buffer, buffer_size, 0.0f);
 
     if (rast_mode) {

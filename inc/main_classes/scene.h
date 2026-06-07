@@ -65,6 +65,14 @@ public:
         objects.push_back(std::make_unique<Cube>());
     }
 
+    void addPyramid() {
+        objects.push_back(std::make_unique<Pyramid>());
+    }
+
+    void addSphere() {
+        objects.push_back(std::make_unique<Sphere>());
+    }
+
     // scene options
     void mergeScene();
     void saveScene();

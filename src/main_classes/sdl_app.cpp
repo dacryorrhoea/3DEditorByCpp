@@ -72,7 +72,7 @@ void SDLApp::rebuildUI() {
         0, 115, 180, 30,
         "add sphere",
         [this]() {
-            scene.addCube();
+            scene.addSphere();
             uiDirty = true;
         }
     );
@@ -81,7 +81,7 @@ void SDLApp::rebuildUI() {
         0, 150, 180, 30,
         "add pyramid",
         [this]() {
-            scene.addCube();
+            scene.addPyramid();
             uiDirty = true;
         }
     );

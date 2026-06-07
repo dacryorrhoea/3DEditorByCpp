@@ -20,7 +20,7 @@ AppContext::AppContext(int w, int h) {
     window_h = (h > 0) ? h : dm.h;
 
     window = SDL_CreateWindow(
-        "(X_X)",
+        "3DEditorByCpp",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         window_w, window_h, 0
     );
