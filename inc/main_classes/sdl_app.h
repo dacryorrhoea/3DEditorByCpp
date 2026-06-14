@@ -1,7 +1,9 @@
 #pragma once
 
 #include <memory>
-#include "objects/all_objects.h"
+#include <iostream>
+#include <exception>
+#include "suph/all_objects.h"
 #include "main_classes/app_context.h"
 #include "main_classes/scene.h"
 #include "main_classes/ui.h"
@@ -58,25 +60,36 @@ public:
         , objectScale(false)
         , uiDirty(true)
     {
-        if (app_context.fail) {
-            running = false;
-            return;
-        }
+        try {
+            if (app_context.fail) {
+                running = false;
+                return;
+            }
 
-        if (!scene.getObjects().empty()) {
-            currObject = scene.getObjects()[0];
-        } else {
-            return;
+            if (!scene.getObjects().empty()) {
+                currObject = scene.getObjects()[0];
+            } else {
+                return;
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in SDLApp constructor: "
+                      << e.what()
+                      << std::endl;
+            running = false;
+        } catch (...) {
+            std::cerr << "Unknown exception in SDLApp constructor"
+                      << std::endl;
+            running = false;
         }
     }
 
-    bool isRunning() {
+    bool isRunning() const noexcept {
         return running;
     }
 
     void run();
 
-    void stop() {
-        //
+    void stop() noexcept {
+        // ничего не делаем
     }
 };

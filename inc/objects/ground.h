@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <exception>
 #include <vector>
 #include <string>
 #include "object.h"
@@ -54,7 +56,18 @@ public:
     Ground(float size = 500.0f, int cells = 120)
         : Mesh(makeVertices(size, cells), makeFaces(cells))
     {
-        object_name = "Ground";
-        editeble = false;
+        try {
+            object_name = "Ground";
+            editeble = false;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in Ground constructor: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in Ground constructor"
+                      << std::endl;
+            throw;
+        }
     }
 };

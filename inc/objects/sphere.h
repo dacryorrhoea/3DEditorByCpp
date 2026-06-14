@@ -1,10 +1,11 @@
 #pragma once
 
-#include "object.h"
-#include "geometry/mesh.h"
-
+#include <iostream>
+#include <exception>
 #include <vector>
 #include <cmath>
+#include "object.h"
+#include "geometry/mesh.h"
 
 class Sphere : public Object, public Mesh {
 private:
@@ -14,14 +15,14 @@ private:
 
         for (int i = 0; i <= stacks; ++i) {
             float v = static_cast<float>(i) / stacks;
-            float phi = pi * v; // 0..PI
+            float phi = pi * v;
 
             float y = std::cos(phi);
             float r = std::sin(phi);
 
             for (int j = 0; j <= slices; ++j) {
                 float u = static_cast<float>(j) / slices;
-                float theta = 2.0f * pi * u; // 0..2PI
+                float theta = 2.0f * pi * u;
 
                 float x = r * std::cos(theta);
                 float z = r * std::sin(theta);
@@ -60,7 +61,18 @@ public:
     Sphere(int stacks = 16, int slices = 24)
         : Mesh(buildVertices(stacks, slices), buildIndices(stacks, slices))
     {
-        object_name = "Sphere";
-        color = 0xFFFF22FF;
+        try {
+            object_name = "Sphere";
+            color = 0xFFFF22FF;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in Sphere constructor: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in Sphere constructor"
+                      << std::endl;
+            throw;
+        }
     }
 };

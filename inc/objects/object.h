@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 #include <string>
+#include <iostream>
+#include <exception>
 
 #include "geometry/mesh.h"
 
@@ -38,35 +40,48 @@ public:
         , right(1.0f, 0.0f, 0.0f)
         , up(0.0f, 1.0f, 0.0f)
         , color(0x808080FF)
-    {}
+    {
+        try {
+            // инициализация уже выполнена в списке инициализации
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in Object constructor: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in Object constructor"
+                      << std::endl;
+            throw;
+        }
+    }
 
-    bool isChanged() {
+    bool isChanged() const noexcept {
         return changed;
     }
 
-    bool isRenderable() {
+    bool isRenderable() const noexcept {
         return renderable;
     }
 
-    bool isEditeble() {
+    bool isEditeble() const noexcept {
         return editeble;
     }
 
-    bool isSaveble() {
+    bool isSaveble() const noexcept {
         return saveble;
     }
 
-    void moveForwardBackward(float dist) {
+    void moveForwardBackward(float dist) noexcept {
         position += forward * dist;
         changed = true;
     }
 
-    void moveRightLeft(float dist) {
+    void moveRightLeft(float dist) noexcept {
         position += right * dist;
         changed = true;
     }
 
-    void moveUpDown(float dist) {
+    void moveUpDown(float dist) noexcept {
         position += up * dist;
         changed = true;
     }
@@ -74,10 +89,20 @@ public:
     void rotateYaw(float angle);
     void rotatePitch(float angle);
 
-
     std::string getName() {
-        return object_name;
-    };
+        try {
+            return object_name;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in getName: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in getName"
+                      << std::endl;
+            throw;
+        }
+    }
 
     virtual ~Object() = default;
 };

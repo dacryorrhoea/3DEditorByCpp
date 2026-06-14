@@ -1,0 +1,8 @@
+#include "objects/object.h"
+#include "objects/camera.h"
+#include "objects/cube.h"
+#include "objects/ground.h"
+#include "objects/light_source.h"
+#include "objects/model.h"
+#include "objects/pyramid.h"
+#include "objects/sphere.h"

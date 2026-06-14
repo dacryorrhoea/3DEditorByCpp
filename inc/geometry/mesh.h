@@ -5,9 +5,9 @@
 #include <string>
 #include <array>
 #include <cmath>
+#include <exception>
 #include "containers/vertices.h"
 #include "containers/faces.h"
-
 
 class Mesh {
 protected:
@@ -29,19 +29,28 @@ public:
     Mesh(const Mesh&) = default;
 
     Mesh(const std::vector<float>& v, const std::vector<int>& f) {
-        if (f.size() % 3 != 0 || v.size() % 3 != 0)
-            throw std::invalid_argument("must be multiples of 3");
+        try {
+            if (f.size() % 3 != 0 || v.size() % 3 != 0)
+                throw std::invalid_argument("must be multiples of 3");
 
-        vertices.Reserve(v.size() / 3);
-        for (size_t i = 0; i < v.size(); i += 3)
-        {
-            vertices.Add(Vertex(v[i], v[i + 1], v[i + 2]));
-        }
+            vertices.Reserve(v.size() / 3);
+            for (size_t i = 0; i < v.size(); i += 3) {
+                vertices.Add(Vertex(v[i], v[i + 1], v[i + 2]));
+            }
 
-        faces.Reserve(f.size() / 3);
-        for (size_t i = 0; i < f.size(); i += 3)
-        {
-            faces.Add(Face(f[i], f[i + 1], f[i + 2]));
+            faces.Reserve(f.size() / 3);
+            for (size_t i = 0; i < f.size(); i += 3) {
+                faces.Add(Face(f[i], f[i + 1], f[i + 2]));
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in Mesh constructor: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in Mesh constructor"
+                      << std::endl;
+            throw;
         }
     }
 
@@ -52,16 +61,27 @@ public:
         const Vertex& up,
         VertexContainer& out
     ) const {
-        out.Clear();
-        out.Reserve(vertices.Size());
+        try {
+            out.Clear();
+            out.Reserve(vertices.Size());
 
-        for (const Vertex& v : vertices) {
-            out.Add(
-                position +
-                right * v.x +
-                up * v.y +
-                forward * v.z
-            );
+            for (const Vertex& v : vertices) {
+                out.Add(
+                    position +
+                    right * v.x +
+                    up * v.y +
+                    forward * v.z
+                );
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in getTransformedVertices: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in getTransformedVertices"
+                      << std::endl;
+            throw;
         }
     }
 
@@ -71,19 +91,30 @@ public:
         const Vertex& right,
         const Vertex& up
     ) {
-        VertexContainer new_vert;
-        new_vert.Reserve(vertices.Size());
+        try {
+            VertexContainer new_vert;
+            new_vert.Reserve(vertices.Size());
 
-        for (const Vertex& v : vertices) {
-            new_vert.Add(
-                position +
-                right * v.x +
-                up * v.y +
-                forward * v.z
-            );
+            for (const Vertex& v : vertices) {
+                new_vert.Add(
+                    position +
+                    right * v.x +
+                    up * v.y +
+                    forward * v.z
+                );
+            }
+
+            vertices = new_vert;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in setTransformedVertices: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in setTransformedVertices"
+                      << std::endl;
+            throw;
         }
-
-        vertices = new_vert;
     }
 
     void shiftVertexSetX(float shift, std::vector<int>& subv) {
@@ -144,28 +175,49 @@ public:
     }
 
     Mesh& operator+=(const Mesh& src_mesh) {
-        const int offset = static_cast<int>(vertices.Size());
+        try {
+            const int offset = static_cast<int>(vertices.Size());
 
-        vertices.Reserve(vertices.Size() + src_mesh.vertices.Size());
-        faces.Reserve(faces.Size() + src_mesh.faces.Size());
+            vertices.Reserve(vertices.Size() + src_mesh.vertices.Size());
+            faces.Reserve(faces.Size() + src_mesh.faces.Size());
 
-        for (const auto& v : src_mesh.vertices) {
-            vertices.Add(v);
+            for (const auto& v : src_mesh.vertices) {
+                vertices.Add(v);
+            }
+
+            for (const auto& f : src_mesh.faces) {
+                faces.Add(
+                    Face(f.f1 + offset, f.f2 + offset, f.f3 + offset)
+                );
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in operator+=: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in operator+="
+                      << std::endl;
+            throw;
         }
-
-        for (const auto& f : src_mesh.faces) {
-            faces.Add(
-                Face(f.f1 + offset, f.f2 + offset, f.f3 + offset)
-            );
-        }
-
         return *this;
     }
 
     Mesh operator+(const Mesh& src_mesh) const {
-        Mesh result = *this;
-        result += src_mesh;
-        return result;
+        try {
+            Mesh result = *this;
+            result += src_mesh;
+            return result;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in operator+: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in operator+"
+                      << std::endl;
+            throw;
+        }
     }
 
     VertexContainer& getVertecies() {

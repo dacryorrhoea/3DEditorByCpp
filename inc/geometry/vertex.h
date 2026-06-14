@@ -1,5 +1,9 @@
 #pragma once
 
+#include <iostream>
+#include <array>
+#include <cmath>
+
 struct Vertex {
     float x;
     float y;
@@ -52,6 +56,7 @@ struct Vertex {
 
     void normalized() noexcept {
         float l = std::sqrt(x*x + y*y + z*z);
+        if (l == 0.0f) return;
         x /= l;
         y /= l;
         z /= l;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <exception>
 #include "object.h"
 
 struct LightSource : public Object {
@@ -11,17 +13,28 @@ public:
         : Object({0.0f, 0.0f, 0.0f}, false, false, false)
         , active_state(active)
     {
-        object_name = "LightSource";
-        forward = Vertex(-1.0f, -1.0f, -1.0f);
-        right   = Vertex(1.0f, 0.0f, 0.0f);
-        up      = Vertex(0.0f, 0.0f, 1.0f);
+        try {
+            object_name = "LightSource";
+            forward = Vertex(-1.0f, -1.0f, -1.0f);
+            right   = Vertex(1.0f, 0.0f, 0.0f);
+            up      = Vertex(0.0f, 0.0f, 1.0f);
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in LightSource constructor: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in LightSource constructor"
+                      << std::endl;
+            throw;
+        }
     }
 
-    bool getLSActiveState() {
+    bool getLSActiveState() const noexcept {
         return active_state;
     }
 
-    void setLSActiveState(bool active) {
+    void setLSActiveState(bool active) noexcept {
         active_state = active;
     }
 };

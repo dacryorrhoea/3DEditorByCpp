@@ -14,5 +14,5 @@ public:
     bool fail = true;
 
     AppContext(int w = 0, int h = 0);
-    ~AppContext();
+    ~AppContext() noexcept;
 };

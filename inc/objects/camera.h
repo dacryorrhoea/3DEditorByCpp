@@ -1,17 +1,26 @@
 #pragma once
 
 #include <algorithm>
+#include <iostream>
+#include <exception>
 #include "containers/polygons.h"
-#include "objects/all_objects.h"
+#include "suph/all_objects.h"
 #include "geometry/mesh.h"
 
-struct Camera : public Object {
+class Camera : public Object {
 private:
     bool active_state;
     int W;
     int H;
     float focal;
     PolygonContainer polygons;
+
+    struct AxisData {
+        Vertex dir;
+        Vertex side1;
+        Vertex side2;
+        Uint32 color;
+    };
 
 public:
     Camera(int w, int h, bool active = false)
@@ -26,18 +35,29 @@ public:
             )
         )
     {
-        object_name = "Camera";
+        try {
+            object_name = "Camera";
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in Camera constructor: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in Camera constructor"
+                      << std::endl;
+            throw;
+        }
     }
 
-    bool getCamActiveState() {
+    bool getCamActiveState() const noexcept {
         return active_state;
     }
 
-    void setCamActiveState(bool active) {
+    void setCamActiveState(bool active) noexcept {
         active_state = active;
     }
 
-    const PolygonContainer& getPolygons() const {
+    const PolygonContainer& getPolygons() const noexcept {
         return polygons;
     }
 

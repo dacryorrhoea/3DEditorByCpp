@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 struct Face {
     int f1;
     int f2;
@@ -8,7 +10,7 @@ struct Face {
     constexpr Face(int a, int b, int c) noexcept
         : f1(a)
         , f2(b)
-        , f3(c) 
+        , f3(c)
     {}
 
     constexpr Face operator+(int s) const noexcept {

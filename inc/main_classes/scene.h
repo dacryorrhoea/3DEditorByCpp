@@ -3,26 +3,40 @@
 #include <cmath>
 #include <algorithm>
 #include <memory>
+#include <iostream>
+#include <exception>
 #include "containers/polygons.h"
-#include "objects/all_objects.h"
+#include "suph/all_objects.h"
 
 class Scene {
 private:
     std::vector<std::unique_ptr<Object>> objects;
     LightSource* light_src = nullptr;
+
 public:
     Camera* camera = nullptr;
 
     Scene(int w, int h) {
-        auto cam = std::make_unique<Camera>(w, h, true);
-        camera = cam.get();
-        objects.push_back(std::move(cam));
+        try {
+            auto cam = std::make_unique<Camera>(w, h, true);
+            camera = cam.get();
+            objects.push_back(std::move(cam));
 
-        auto lsrc = std::make_unique<LightSource>(w, h, true);
-        light_src = lsrc.get();
-        objects.push_back(std::move(lsrc));
+            auto lsrc = std::make_unique<LightSource>(w, h, true);
+            light_src = lsrc.get();
+            objects.push_back(std::move(lsrc));
 
-        objects.push_back(std::move(std::make_unique<Ground>()));
+            objects.push_back(std::move(std::make_unique<Ground>()));
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in Scene constructor: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in Scene constructor"
+                      << std::endl;
+            throw;
+        }
     }
 
     std::vector<Object*> getObjects() {
@@ -32,45 +46,107 @@ public:
         return out;
     }
 
-
-    // add objects
     void addObject(std::unique_ptr<Object> obj) {
-        if (auto cam = dynamic_cast<Camera*>(obj.get())) {
-            if (cam->getCamActiveState())
-            camera = cam;
+        try {
+            if (auto cam = dynamic_cast<Camera*>(obj.get())) {
+                if (cam->getCamActiveState())
+                    camera = cam;
+            }
+            objects.push_back(std::move(obj));
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in addObject: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in addObject"
+                      << std::endl;
+            throw;
         }
-
-        objects.push_back(std::move(obj));
     }
 
     void removeObject(Object* target) {
-        auto it = std::find_if(
-            objects.begin(),
-            objects.end(),
-            [target](const std::unique_ptr<Object>& obj) {
-                return obj.get() == target;
+        try {
+            auto it = std::find_if(
+                objects.begin(),
+                objects.end(),
+                [target](const std::unique_ptr<Object>& obj) {
+                    return obj.get() == target;
+                }
+            );
+            if (it != objects.end()) {
+                objects.erase(it);
             }
-        );
-
-        if (it != objects.end()) {
-            objects.erase(it);
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in removeObject: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in removeObject"
+                      << std::endl;
+            throw;
         }
     }
 
     void addModel(const std::string& path) {
-        objects.push_back(std::make_unique<Model>(path));
+        try {
+            objects.push_back(std::make_unique<Model>(path));
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in addModel: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in addModel"
+                      << std::endl;
+            throw;
+        }
     }
 
     void addCube() {
-        objects.push_back(std::make_unique<Cube>());
+        try {
+            objects.push_back(std::make_unique<Cube>());
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in addCube: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in addCube"
+                      << std::endl;
+            throw;
+        }
     }
 
     void addPyramid() {
-        objects.push_back(std::make_unique<Pyramid>());
+        try {
+            objects.push_back(std::make_unique<Pyramid>());
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in addPyramid: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in addPyramid"
+                      << std::endl;
+            throw;
+        }
     }
 
     void addSphere() {
-        objects.push_back(std::make_unique<Sphere>());
+        try {
+            objects.push_back(std::make_unique<Sphere>());
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in addSphere: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in addSphere"
+                      << std::endl;
+            throw;
+        }
     }
 
     // scene options
@@ -78,20 +154,28 @@ public:
     void saveScene();
     void rollbackScene();
 
-    // projection work
-    const PolygonContainer& getProjFromCurrCamera() {
+    const PolygonContainer& getProjFromCurrCamera() const noexcept {
         return camera->getPolygons();
     }
 
     void update() {
-        std::vector<Object*> sceneObjects;
-
-        for (auto& obj : objects) {
-            if (obj->isRenderable()) {
-                sceneObjects.push_back(obj.get());
+        try {
+            std::vector<Object*> sceneObjects;
+            for (auto& obj : objects) {
+                if (obj->isRenderable()) {
+                    sceneObjects.push_back(obj.get());
+                }
             }
+            camera->toProjectingScene(sceneObjects, *light_src);
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in Scene::update: "
+                      << e.what()
+                      << std::endl;
+            throw;
+        } catch (...) {
+            std::cerr << "Unknown exception in Scene::update"
+                      << std::endl;
+            throw;
         }
-
-        camera->toProjectingScene(sceneObjects, *light_src);
     }
 };

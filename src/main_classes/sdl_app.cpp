@@ -1,5 +1,8 @@
-#include "sup_class/pch.h"
+#include "suph/pch.h"
 #include "main_classes/sdl_app.h"
+#include <iostream>
+#include <exception>
+#include <filesystem>
 
 void SDLApp::rebuildUI() {
     ui.clearButtons();
@@ -11,7 +14,7 @@ void SDLApp::rebuildUI() {
             canvas.changeRastMode();
         }
     );
-    
+
     ui.addButton(
         190, 0, 180, 30,
         "merge scene",
@@ -90,11 +93,10 @@ void SDLApp::rebuildUI() {
     for (Object* obj : scene.getObjects()) {
         int btnX = 0;
         Uint32 objColor = 0x888888FF;
-        if (obj == currObject && !objectEdit && !objectScale)
-        {
+        if (obj == currObject && !objectEdit && !objectScale) {
             objColor = 0x33CC33FF;
         }
-                
+
         ui.addButton(
             btnX, btnY, 180, 30,
             obj->getName(),
@@ -109,8 +111,7 @@ void SDLApp::rebuildUI() {
 
         btnX += 185;
 
-        if (obj->isRenderable())
-        { 
+        if (obj->isRenderable()) {
             ui.addButton(
                 btnX, btnY, 30, 30,
                 "X",
@@ -118,7 +119,6 @@ void SDLApp::rebuildUI() {
                     if (currObject == obj) {
                         currObject = nullptr;
                     }
-
                     scene.removeObject(obj);
                     uiDirty = true;
                 },
@@ -156,7 +156,6 @@ void SDLApp::rebuildUI() {
 
             btnX += 35;
         }
-
 
         if (obj == currObject && obj->isEditeble()) {
             Uint32 editColor = (objectEdit && obj == currObject)
@@ -200,166 +199,132 @@ void SDLApp::rebuildUI() {
 }
 
 void SDLApp::run() {
-    if (!currObject) currObject = scene.camera;
+    try {
+        if (!currObject) currObject = scene.camera;
 
-    if (uiDirty) rebuildUI();
+        if (uiDirty) rebuildUI();
 
-    while (SDL_PollEvent(&event)) {
-        // system close button
-        if (event.type == SDL_QUIT) {
-            running = false;
-            continue;
-        }
-
-        // mouse left click
-        if (
-            event.type == SDL_MOUSEBUTTONDOWN &&
-            event.button.button == SDL_BUTTON_LEFT
-        ) {
-            ui.hitTest(
-                event.button.x,
-                event.button.y
-            );
-        }
-
-        // mouse middle click
-        if (objectEdit) {
-            if (
-                event.type == SDL_MOUSEBUTTONDOWN &&
-                event.button.button == SDL_BUTTON_MIDDLE
-            ) {
-                SDL_SetRelativeMouseMode(SDL_TRUE);
-                selectedVerts = scene.camera->selectVertex(
-                    event.button.x,
-                    event.button.y,
-                    currObject
-                );
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+                continue;
             }
 
-            if (
-                event.type == SDL_MOUSEBUTTONUP &&
-                event.button.button == SDL_BUTTON_MIDDLE
-            ) {
-                SDL_SetRelativeMouseMode(SDL_FALSE);
-                selectedVerts.clear();
+            if (event.type == SDL_MOUSEBUTTONDOWN &&
+                event.button.button == SDL_BUTTON_LEFT) {
+                ui.hitTest(event.button.x, event.button.y);
             }
-        }
 
-        // mouse right click
-        if (
-            event.type == SDL_MOUSEBUTTONDOWN &&
-            event.button.button == SDL_BUTTON_RIGHT
-        ) {
-            SDL_SetRelativeMouseMode(SDL_TRUE);
-            objectControl = true;
-        }
+            if (objectEdit) {
+                if (event.type == SDL_MOUSEBUTTONDOWN &&
+                    event.button.button == SDL_BUTTON_MIDDLE) {
+                    SDL_SetRelativeMouseMode(SDL_TRUE);
+                    selectedVerts = scene.camera->selectVertex(
+                        event.button.x,
+                        event.button.y,
+                        currObject
+                    );
+                }
 
-        if (
-            event.type == SDL_MOUSEBUTTONUP &&
-            event.button.button == SDL_BUTTON_RIGHT
-        ) {
-            SDL_SetRelativeMouseMode(SDL_FALSE);
-            objectControl = false;
-        }
-
-        // mouse wheel
-        if (event.type == SDL_MOUSEWHEEL && !objectEdit && !objectScale) 
-        {
-            if (event.wheel.y > 0) {
-                currObject->moveForwardBackward(CAM_SPEED*7);
-            } else if (event.wheel.y < 0) {
-                currObject->moveForwardBackward(-CAM_SPEED*7);
-            }
-        }
-
-        if (!objectControl && !objectEdit && objectScale) {
-            if (event.type == SDL_MOUSEWHEEL) 
-            {
-                Mesh* mesh = dynamic_cast<Mesh*>(currObject);
-                if (!mesh) return;
-                if (event.wheel.y > 0) {
-                    mesh->scaleMesh(1.1f);
-                } else if (event.wheel.y < 0) {
-                    mesh->scaleMesh(0.9f);
+                if (event.type == SDL_MOUSEBUTTONUP &&
+                    event.button.button == SDL_BUTTON_MIDDLE) {
+                    SDL_SetRelativeMouseMode(SDL_FALSE);
+                    selectedVerts.clear();
                 }
             }
+
+            if (event.type == SDL_MOUSEBUTTONDOWN &&
+                event.button.button == SDL_BUTTON_RIGHT) {
+                SDL_SetRelativeMouseMode(SDL_TRUE);
+                objectControl = true;
+            }
+
+            if (event.type == SDL_MOUSEBUTTONUP &&
+                event.button.button == SDL_BUTTON_RIGHT) {
+                SDL_SetRelativeMouseMode(SDL_FALSE);
+                objectControl = false;
+            }
+
+            if (event.type == SDL_MOUSEWHEEL && !objectEdit && !objectScale) {
+                if (event.wheel.y > 0) {
+                    currObject->moveForwardBackward(CAM_SPEED * 7);
+                } else if (event.wheel.y < 0) {
+                    currObject->moveForwardBackward(-CAM_SPEED * 7);
+                }
+            }
+
+            if (!objectControl && !objectEdit && objectScale) {
+                if (event.type == SDL_MOUSEWHEEL) {
+                    Mesh* mesh = dynamic_cast<Mesh*>(currObject);
+                    if (!mesh) return;
+                    if (event.wheel.y > 0) {
+                        mesh->scaleMesh(1.1f);
+                    } else if (event.wheel.y < 0) {
+                        mesh->scaleMesh(0.9f);
+                    }
+                }
+            }
+
+            if (event.type == SDL_KEYDOWN &&
+                event.key.keysym.sym == SDLK_ESCAPE) {
+                running = false;
+                continue;
+            }
         }
 
-        // exit
-        if (
-            event.type == SDL_KEYDOWN &&
-            event.key.keysym.sym == SDLK_ESCAPE
-        ) {
-            running = false;
-            continue;
+        if (state[SDL_SCANCODE_W] && !objectEdit && !objectScale) {
+            currObject->moveForwardBackward(CAM_SPEED);
         }
-    }
+        if (state[SDL_SCANCODE_A] && !objectEdit && !objectScale) {
+            currObject->moveRightLeft(-CAM_SPEED);
+        }
+        if (state[SDL_SCANCODE_S] && !objectEdit && !objectScale) {
+            currObject->moveForwardBackward(-CAM_SPEED);
+        }
+        if (state[SDL_SCANCODE_D] && !objectEdit && !objectScale) {
+            currObject->moveRightLeft(CAM_SPEED);
+        }
+        if (state[SDL_SCANCODE_SPACE] && !objectEdit && !objectScale) {
+            currObject->moveUpDown(CAM_SPEED);
+        }
+        if (state[SDL_SCANCODE_LSHIFT] && !objectEdit && !objectScale) {
+            currObject->moveUpDown(-CAM_SPEED);
+        }
 
-    // camera control
-    // WASD movementstate = SDL_GetKeyboardState(NULL);
-    if (
-        state[SDL_SCANCODE_W] && !objectEdit && !objectScale
-    )
-    {
-        currObject->moveForwardBackward(CAM_SPEED);
-    }
-    if (
-        state[SDL_SCANCODE_A] && !objectEdit && !objectScale
-    )
-    {
-        currObject->moveRightLeft(-CAM_SPEED);
-    }
-    if (
-        state[SDL_SCANCODE_S] && !objectEdit && !objectScale
-    )
-    {
-        currObject->moveForwardBackward(-CAM_SPEED);
-    }
-    if (
-        state[SDL_SCANCODE_D] && !objectEdit && !objectScale
-    )
-    {
-        currObject->moveRightLeft(CAM_SPEED);
-    }
-    if (
-        state[SDL_SCANCODE_SPACE] && !objectEdit && !objectScale
-    )
-    {
-        currObject->moveUpDown(CAM_SPEED);
-    }
-    if (
-        state[SDL_SCANCODE_LSHIFT] && !objectEdit && !objectScale
-    )
-    {
-        currObject->moveUpDown(-CAM_SPEED);
-    }
-    
-    // mouse movement
-    int dx, dy;
-    SDL_GetRelativeMouseState(&dx, &dy);
-    mouse = SDL_GetMouseState(NULL, NULL);
+        int dx, dy;
+        SDL_GetRelativeMouseState(&dx, &dy);
+        mouse = SDL_GetMouseState(NULL, NULL);
 
-    if (objectControl && !objectEdit && !objectScale) {
-        if (dx) currObject->rotateYaw(-0.001f * dx);
-        if (dy) currObject->rotatePitch(-0.001f * dy);
+        if (objectControl && !objectEdit && !objectScale) {
+            if (dx) currObject->rotateYaw(-0.001f * dx);
+            if (dy) currObject->rotatePitch(-0.001f * dy);
+        }
+
+        if (!objectControl && objectEdit && !objectScale) {
+            Mesh* mesh = dynamic_cast<Mesh*>(currObject);
+            if (!mesh) return;
+            if (dx) mesh->shiftVertexSetX(-0.001f * dx, selectedVerts);
+            if (dy) mesh->shiftVertexSetX(-0.001f * dy, selectedVerts);
+        }
+
+        scene.update();
+
+        ui.build();
+
+        canvas.toRasterizRender(
+            scene.getProjFromCurrCamera(),
+            ui.getPixels()
+        );
+
+        SDL_Delay(10);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in SDLApp::run: "
+                  << e.what()
+                  << std::endl;
+        running = false;
+    } catch (...) {
+        std::cerr << "Unknown exception in SDLApp::run"
+                  << std::endl;
+        running = false;
     }
-
-    if (!objectControl && objectEdit && !objectScale) {
-        Mesh* mesh = dynamic_cast<Mesh*>(currObject);
-        if (!mesh) return;
-
-        if (dx) mesh->shiftVertexSetX(-0.001f * dx, selectedVerts);
-        if (dy) mesh->shiftVertexSetX(-0.001f * dy, selectedVerts);
-    }
-
-    scene.update();
-
-    ui.build();
-    
-    canvas.toRasterizRender(
-        scene.getProjFromCurrCamera(),
-        ui.getPixels()
-    );
-    
-    SDL_Delay(10);
 }
