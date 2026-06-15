@@ -1,10 +1,5 @@
 #include "suph/pch.h"
-
 #include "objects/object.h"
-#include <iostream>
-#include <exception>
-#include <cmath>
-#include <array>
 
 void Object::rotateYaw(float angle) {
     try {

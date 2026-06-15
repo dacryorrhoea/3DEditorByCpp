@@ -1,7 +1,5 @@
 #include "suph/pch.h"
 #include "main_classes/sdl_app.h"
-#include <iostream>
-#include <exception>
 #include <filesystem>
 
 void SDLApp::rebuildUI() {
@@ -28,7 +26,9 @@ void SDLApp::rebuildUI() {
         380, 0, 180, 30,
         "save scene",
         [this]() {
-            canvas.changeRastMode();
+            scene.saveScene();
+            currObject = nullptr;
+            uiDirty = true;
         }
     );
 
@@ -36,7 +36,9 @@ void SDLApp::rebuildUI() {
         570, 0, 180, 30,
         "rollback scene",
         [this]() {
-            canvas.changeRastMode();
+            scene.rollbackScene();
+            currObject = nullptr;
+            uiDirty = true;
         }
     );
 

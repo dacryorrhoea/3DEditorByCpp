@@ -58,11 +58,11 @@ public:
         try {
             Clear();
         } catch (const std::exception& e) {
-            std::cerr << "Exception in ClearPolygons: "
+            std::cerr << "Exception in PolygonContainer::ClearPolygons: "
                       << e.what()
                       << std::endl;
         } catch (...) {
-            std::cerr << "Unknown exception in ClearPolygons"
+            std::cerr << "Unknown exception in PolContainer::ClearPolygons"
                       << std::endl;
         }
     }

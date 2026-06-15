@@ -13,12 +13,13 @@ public:
         try {
             Add(vertex);
         } catch (const std::exception& e) {
-            std::cerr << "Exception in AddVertex: "
+            std::cerr << "Exception in VertexContainer::AddVertex: "
                       << e.what()
                       << std::endl;
             throw;
         } catch (...) {
-            std::cerr << "Unknown exception in AddVertex" << std::endl;
+            std::cerr << "Unknown exception in VertexContainer::AddVertex"
+                      << std::endl;
             throw;
         }
     }
@@ -27,11 +28,12 @@ public:
         try {
             Clear();
         } catch (const std::exception& e) {
-            std::cerr << "Exception in ClearVertices: "
+            std::cerr << "Exception in VertexContainer::ClearVertices: "
                       << e.what()
                       << std::endl;
         } catch (...) {
-            std::cerr << "Unknown exception in ClearVertices" << std::endl;
+            std::cerr << "Unknown exception in VertexContainer::ClearVertices"
+                      << std::endl;
         }
     }
 };

@@ -93,12 +93,12 @@ public:
         try {
             return object_name;
         } catch (const std::exception& e) {
-            std::cerr << "Exception in getName: "
+            std::cerr << "Exception in Object::getName: "
                       << e.what()
                       << std::endl;
             throw;
         } catch (...) {
-            std::cerr << "Unknown exception in getName"
+            std::cerr << "Unknown exception in Object::getName"
                       << std::endl;
             throw;
         }

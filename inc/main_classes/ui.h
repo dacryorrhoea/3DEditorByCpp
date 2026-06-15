@@ -77,12 +77,12 @@ public:
                 onClick
             });
         } catch (const std::exception& e) {
-            std::cerr << "Exception in addButton: "
+            std::cerr << "Exception in UI::addButton: "
                       << e.what()
                       << std::endl;
             throw;
         } catch (...) {
-            std::cerr << "Unknown exception in addButton"
+            std::cerr << "Unknown exception in UI::addButton"
                       << std::endl;
             throw;
         }

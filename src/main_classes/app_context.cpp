@@ -1,9 +1,6 @@
 #include "suph/pch.h"
 #include "main_classes/app_context.h"
 
-#include <iostream>
-#include <exception>
-
 AppContext::AppContext(int w, int h) {
     try {
         if (SDL_Init(SDL_INIT_VIDEO) != 0) {

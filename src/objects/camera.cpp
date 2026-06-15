@@ -1,9 +1,5 @@
 #include "suph/pch.h"
-
 #include "objects/camera.h"
-#include <iostream>
-#include <exception>
-#include <algorithm>
 
 void Camera::getVerticesCamSpace(
     const VertexContainer& vertW,

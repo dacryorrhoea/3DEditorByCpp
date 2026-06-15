@@ -61,6 +61,9 @@ public:
         return polygons;
     }
 
+    int getWidth() const noexcept { return W; }
+    int getHeight() const noexcept { return H; }
+
     std::vector<int> selectVertex(int x, int y, Object* obj);
 
     void getVerticesCamSpace(

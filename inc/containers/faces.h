@@ -13,12 +13,13 @@ public:
         try {
             Add(face);
         } catch (const std::exception& e) {
-            std::cerr << "Exception in AddFace: "
+            std::cerr << "Exception in FaceContainer::AddFace: "
                       << e.what()
                       << std::endl;
             throw;
         } catch (...) {
-            std::cerr << "Unknown exception in AddFace" << std::endl;
+            std::cerr << "Unknown exception in FaceContainer::AddFace"
+                      << std::endl;
             throw;
         }
     }
@@ -27,11 +28,12 @@ public:
         try {
             Clear();
         } catch (const std::exception& e) {
-            std::cerr << "Exception in ClearFaces: "
+            std::cerr << "Exception in FaceContainer::ClearFaces: "
                       << e.what()
                       << std::endl;
         } catch (...) {
-            std::cerr << "Unknown exception in ClearFaces" << std::endl;
+            std::cerr << "Unknown exception in FaceContainer::ClearFaces"
+                      << std::endl;
         }
     }
 };

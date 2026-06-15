@@ -1,9 +1,6 @@
 #include "suph/pch.h"
 
 #include "main_classes/canvas.h"
-#include <iostream>
-#include <exception>
-#include <algorithm>
 
 void Canvas::rastFillMode(const PolygonContainer& scene_proj) {
     try {
