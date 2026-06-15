@@ -160,7 +160,6 @@ public:
         }
     }
 
-    // scene options
     void mergeScene();
     void saveScene();
     void rollbackScene();

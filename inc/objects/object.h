@@ -42,7 +42,7 @@ public:
         , color(0x808080FF)
     {
         try {
-            // инициализация уже выполнена в списке инициализации
+            //
         } catch (const std::exception& e) {
             std::cerr << "Exception in Object constructor: "
                       << e.what()

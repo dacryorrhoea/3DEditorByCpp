@@ -88,8 +88,4 @@ public:
     }
 
     void run();
-
-    void stop() noexcept {
-        // ничего не делаем
-    }
 };

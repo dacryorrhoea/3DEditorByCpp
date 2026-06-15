@@ -10,7 +10,6 @@ int main() {
             app.run();
         }
 
-        app.stop();
         return 0;
     } catch (const std::exception& e) {
         std::cerr << "Fatal exception in main: "
