@@ -20,8 +20,7 @@ public:
             up      = Vertex(0.0f, 0.0f, 1.0f);
         } catch (const std::exception& e) {
             std::cerr << "Exception in LightSource constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in LightSource constructor"

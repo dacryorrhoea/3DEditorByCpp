@@ -44,8 +44,7 @@ public:
             storage.push_back(pol);
         } catch (const std::exception& e) {
             std::cerr << "Exception in PolygonContainer::Add: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in PolygonContainer::Add"
@@ -59,8 +58,7 @@ public:
             Clear();
         } catch (const std::exception& e) {
             std::cerr << "Exception in PolygonContainer::ClearPolygons: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
         } catch (...) {
             std::cerr << "Unknown exception in PolContainer::ClearPolygons"
                       << std::endl;

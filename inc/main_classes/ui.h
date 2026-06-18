@@ -39,8 +39,7 @@ public:
             clear();
         } catch (const std::exception& e) {
             std::cerr << "Exception in UI constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in UI constructor"
@@ -78,8 +77,7 @@ public:
             });
         } catch (const std::exception& e) {
             std::cerr << "Exception in UI::addButton: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in UI::addButton"
@@ -164,8 +162,7 @@ public:
             }
         } catch (const std::exception& e) {
             std::cerr << "Exception in UI::build: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in UI::build"
@@ -183,8 +180,7 @@ public:
                         btn.onClick();
                     } catch (const std::exception& e) {
                         std::cerr << "Exception in UI button callback: "
-                                  << e.what()
-                                  << std::endl;
+                                  << e.what()                 << std::endl;
                     } catch (...) {
                         std::cerr << "Unknown exception in UI button callback"
                                   << std::endl;

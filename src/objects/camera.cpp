@@ -84,8 +84,7 @@ std::vector<int> Camera::selectVertex(int x, int y, Object* obj) {
         }
     } catch (const std::exception& e) {
         std::cerr << "Exception in Camera::selectVertex: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
         throw;
     } catch (...) {
         std::cerr << "Unknown exception in Camera::selectVertex"
@@ -227,8 +226,7 @@ void Camera::toProjectingScene(
         }
     } catch (const std::exception& e) {
         std::cerr << "Exception in Camera::toProjectingScene: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
         throw;
     } catch (...) {
         std::cerr << "Unknown exception in Camera::toProjectingScene"

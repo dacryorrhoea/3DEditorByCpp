@@ -34,8 +34,7 @@ public:
             std::fill_n(pixels_buffer, buffer_size, 0u);
         } catch (const std::exception& e) {
             std::cerr << "Exception in Canvas constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Canvas constructor"
@@ -70,8 +69,7 @@ public:
             std::fill_n(pixels_buffer, buffer_size, 0u);
         } catch (const std::exception& e) {
             std::cerr << "Exception in Canvas::toUpdate: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Canvas::toUpdate"

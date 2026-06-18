@@ -1,5 +1,4 @@
 #include "suph/pch.h"
-
 #include "main_classes/canvas.h"
 
 void Canvas::rastFillMode(const PolygonContainer& scene_proj) {
@@ -90,8 +89,7 @@ void Canvas::rastFillMode(const PolygonContainer& scene_proj) {
         }
     } catch (const std::exception& e) {
         std::cerr << "Exception in Canvas::rastFillMode: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
     } catch (...) {
         std::cerr << "Unknown exception in Canvas::rastFillMode"
                   << std::endl;
@@ -123,8 +121,7 @@ void Canvas::rastWireframeMode(const PolygonContainer& scene_proj) {
         }
     } catch (const std::exception& e) {
         std::cerr << "Exception in Canvas::rastWireframeMode: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
     } catch (...) {
         std::cerr << "Unknown exception in Canvas::rastWireframeMode"
                   << std::endl;
@@ -173,8 +170,7 @@ void Canvas::toRasterizRender(
         SDL_RenderPresent(renderer);
     } catch (const std::exception& e) {
         std::cerr << "Exception in Canvas::toRasterizRender: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
     } catch (...) {
         std::cerr << "Unknown exception in Canvas::toRasterizRender"
                   << std::endl;

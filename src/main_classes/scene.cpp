@@ -22,8 +22,7 @@ void Scene::mergeScene() {
         addObject(std::make_unique<Model>(merged_mesh));
     } catch (const std::exception& e) {
         std::cerr << "Exception in Scene::mergeScene: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
         throw;
     } catch (...) {
         std::cerr << "Unknown exception in Scene::mergeScene"

@@ -44,8 +44,7 @@ public:
             }
         } catch (const std::exception& e) {
             std::cerr << "Exception in Mesh constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Mesh constructor"
@@ -75,8 +74,7 @@ public:
             }
         } catch (const std::exception& e) {
             std::cerr << "Exception in Mesh::getTransformedVertices: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Mesh::getTransformedVertices"
@@ -107,8 +105,7 @@ public:
             vertices = new_vert;
         } catch (const std::exception& e) {
             std::cerr << "Exception in Mesh::setTransformedVertices: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Mesh::setTransformedVertices"
@@ -192,8 +189,7 @@ public:
             }
         } catch (const std::exception& e) {
             std::cerr << "Exception in Mesh::operator+=: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Mesh::operator+="
@@ -210,8 +206,7 @@ public:
             return result;
         } catch (const std::exception& e) {
             std::cerr << "Exception in Mesh::operator+: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Mesh::operator+"

@@ -26,8 +26,7 @@ void Object::rotateYaw(float angle) {
         changed = true;
     } catch (const std::exception& e) {
         std::cerr << "Exception in Object::rotateYaw: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
         throw;
     } catch (...) {
         std::cerr << "Unknown exception in Object::rotateYaw"
@@ -73,8 +72,7 @@ void Object::rotatePitch(float angle) {
         changed = true;
     } catch (const std::exception& e) {
         std::cerr << "Exception in Object::rotatePitch: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
         throw;
     } catch (...) {
         std::cerr << "Unknown exception in Object::rotatePitch"

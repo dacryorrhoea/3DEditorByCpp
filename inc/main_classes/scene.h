@@ -40,8 +40,7 @@ public:
             objects.push_back(std::move(std::make_unique<Ground>()));
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene constructor"
@@ -66,8 +65,7 @@ public:
             objects.push_back(std::move(obj));
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene::addObject: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene::addObject"
@@ -90,8 +88,7 @@ public:
             }
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene::removeObject: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene::removeObject"
@@ -105,8 +102,7 @@ public:
             objects.push_back(std::make_unique<Model>(path));
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene::addModel: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene::addModel"
@@ -120,8 +116,7 @@ public:
             objects.push_back(std::make_unique<Cube>());
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene::addCube: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene::addCube"
@@ -135,8 +130,7 @@ public:
             objects.push_back(std::make_unique<Pyramid>());
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene::addPyramid: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene::addPyramid"
@@ -150,8 +144,7 @@ public:
             objects.push_back(std::make_unique<Sphere>());
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene::addSphere: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene::addSphere"
@@ -179,8 +172,7 @@ public:
             camera->toProjectingScene(sceneObjects, *light_src);
         } catch (const std::exception& e) {
             std::cerr << "Exception in Scene::update: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Scene::update"

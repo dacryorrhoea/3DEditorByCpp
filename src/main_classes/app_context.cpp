@@ -72,8 +72,7 @@ AppContext::AppContext(int w, int h) {
         fail = false;
     } catch (const std::exception& e) {
         std::cerr << "Exception in AppContext constructor: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
         fail = true;
     } catch (...) {
         std::cerr << "Unknown exception in AppContext constructor"

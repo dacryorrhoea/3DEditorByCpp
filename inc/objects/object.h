@@ -45,8 +45,7 @@ public:
             //
         } catch (const std::exception& e) {
             std::cerr << "Exception in Object constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Object constructor"
@@ -94,8 +93,7 @@ public:
             return object_name;
         } catch (const std::exception& e) {
             std::cerr << "Exception in Object::getName: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Object::getName"

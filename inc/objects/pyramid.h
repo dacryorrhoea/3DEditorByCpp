@@ -32,8 +32,7 @@ public:
             color = 0xFFFF22FF;
         } catch (const std::exception& e) {
             std::cerr << "Exception in Pyramid constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Pyramid constructor"

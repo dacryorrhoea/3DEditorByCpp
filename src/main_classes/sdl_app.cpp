@@ -321,8 +321,7 @@ void SDLApp::run() {
         SDL_Delay(10);
     } catch (const std::exception& e) {
         std::cerr << "Exception in SDLApp::run: "
-                  << e.what()
-                  << std::endl;
+                  << e.what() << std::endl;
         running = false;
     } catch (...) {
         std::cerr << "Unknown exception in SDLApp::run"

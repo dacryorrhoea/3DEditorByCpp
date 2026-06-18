@@ -79,7 +79,7 @@ Model::FileData Model::loadFromObj(const std::string& fpath) {
                 idx.push_back(vi);
             }
 
-            if (idx.size() != 3) continue;
+            if (idx.size() < 3) continue;
 
             for (size_t k = 1; k + 1 < idx.size(); ++k) {
                 data.faces.insert(

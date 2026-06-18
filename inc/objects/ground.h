@@ -61,8 +61,7 @@ public:
             editeble = false;
         } catch (const std::exception& e) {
             std::cerr << "Exception in Ground constructor: "
-                      << e.what()
-                      << std::endl;
+                      << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Ground constructor"
