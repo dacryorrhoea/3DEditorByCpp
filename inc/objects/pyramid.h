@@ -14,29 +14,34 @@ public:
 
             vertices.Reserve(5);
 
-            for (int z = -1; z <= 1; z += 2)
-                for (int x = -1; x <= 1; x += 2)
-                    vertices.Add(Vertex(x * h, -h, z * h));
+            // Основание: обход против часовой стрелки (если смотреть сверху)
+            vertices.Add(Vertex(-h, -h, -h)); // 0
+            vertices.Add(Vertex( h, -h, -h)); // 1
+            vertices.Add(Vertex( h, -h,  h)); // 2
+            vertices.Add(Vertex(-h, -h,  h)); // 3
 
-            vertices.Add(Vertex(0.0f, h, 0.0f));
+            // Вершина пирамиды
+            vertices.Add(Vertex(0.0f, h, 0.0f)); // 4
 
             faces.Reserve(6);
 
-            faces.Add(Face(0, 1, 3));
-            faces.Add(Face(0, 3, 2));
+            // Нижнее основание (два треугольника, нормали вниз)
+            faces.Add(Face(0, 2, 1)); // 0-2-1
+            faces.Add(Face(0, 3, 2)); // 0-3-2
 
+            // Боковые грани (нормали наружу)
             for (int i = 0; i < 4; ++i)
-                faces.Add(Face(i, 4, (i + 1) % 4));
+                faces.Add(Face(i, (i + 1) % 4, 4)); // i -> (i+1)%4 -> 4
 
             object_name = "Pyramid";
             color = 0xFFFF22FF;
         } catch (const std::exception& e) {
             std::cerr << "Exception in Pyramid constructor: "
-                      << e.what() << std::endl;
+                    << e.what() << std::endl;
             throw;
         } catch (...) {
             std::cerr << "Unknown exception in Pyramid constructor"
-                      << std::endl;
+                    << std::endl;
             throw;
         }
     }
